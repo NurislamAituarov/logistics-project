@@ -1,11 +1,9 @@
 <template>
-  <div :class="{ container__icon: shadow }">
+  <div class="d-flex align-center" :class="{ container__icon: shadow }">
     <svg
       class="icon"
-      width="3px"
+      :width="width || 3"
       height="13px"
-      viewBox="0 0 3 13"
-      version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       v-html="path"
@@ -18,7 +16,7 @@
 import icons from "./icons";
 
 export default {
-  props: ["name", "color", "shadow"],
+  props: ["name", "color", "shadow", "width"],
 
   data() {
     return {

@@ -51,7 +51,8 @@
 
 
 <script>
-import BaseIcon from "./svg/BaseIcon.vue";
+import { mapGetters } from "vuex";
+import BaseIcon from "./icons/BaseIcon.vue";
 
 export default {
   name: "TheTable",
@@ -70,45 +71,22 @@ export default {
         { text: "Название товара", sortable: false, value: "product" },
         { text: "Итого", sortable: false, value: "total" },
       ],
-      columns: [
-        {
-          one: "",
-          action: "действие",
-          name: "Мраморный щебень фр. 2-5 мм, 25кг",
-          price: 1203,
-          quantity: 24,
-          product: "Мраморный щебе",
-          total: "15623",
-        },
-        {
-          action: "действие",
-          name: "Мраморный щебень фр. 2-5 мм, 25кг",
-          price: 1203,
-          quantity: 24,
-          product: "Мраморный щебе",
-          total: "15623",
-        },
-        {
-          action: "действие",
-          name: "Мраморный щебень фр. 2-5 мм, 25кг",
-          price: 1203,
-          quantity: 24,
-          product: "Мраморный щебе",
-          total: "15623",
-        },
-        {
-          action: "действие",
-          name: "Мраморный щебень фр. 2-5 мм, 25кг",
-          price: 1203,
-          quantity: 24,
-          product: "Мраморный щебе",
-          total: "15623",
-        },
-      ],
+      columns: [],
     };
   },
 
+  computed: {
+    ...mapGetters(["getProducts"]),
+  },
+
+  watch: {
+    getColumns(items) {
+      this.columns = items;
+    },
+  },
+
   mounted() {
+    this.columns = this.getProducts;
     setTimeout(() => {
       this.getDataTableHTML();
     });

@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-tabs v-model="tab" bg-color="blue-grey-lighten-2">
+    <v-tabs v-model="tab" bg-color="blue-grey-lighten-2 mb-3">
       <v-tab value="one">Item One</v-tab>
       <v-tab value="two">Item Two</v-tab>
       <v-tab value="three">Item Three</v-tab>
@@ -10,8 +10,8 @@
       <v-window v-model="tab">
         <v-window-item value="one"> One </v-window-item>
 
-        <v-window-item value="two">
-          <TheAddLine />
+        <v-window-item value="two" class="pa-5">
+          <TheAddLine @add-load="addLoad" />
           <TheTable />
         </v-window-item>
 
@@ -34,5 +34,11 @@ export default {
   data: () => ({
     tab: null,
   }),
+
+  methods: {
+    addLoad() {
+      console.log("addLoad");
+    },
+  },
 };
 </script>
