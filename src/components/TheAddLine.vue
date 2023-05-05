@@ -9,6 +9,7 @@
         <v-progress-circular
           indeterminate
           color="white"
+          size="20"
           :width="3"
         ></v-progress-circular>
       </template>

@@ -2,37 +2,26 @@
   <div class="left__sidebar">
     <img :src="img" alt="" class="mb-10" />
 
-    <v-expansion-panels v-model="panel1" :disabled="disabled" multiple>
+    <v-expansion-panels
+      v-for="(item, index) of menuListItems"
+      :key="index"
+      v-model="item.item"
+      :disabled="disabled"
+      multiple
+    >
       <v-expansion-panel class="expansion__panel">
-        <v-expansion-panel-title expand-icon="" collapse-icon=""
-          >Panel 1</v-expansion-panel-title
+        <v-expansion-panel-title expand-icon="" collapse-icon="">{{
+          item.list
+        }}</v-expansion-panel-title>
+        <v-expansion-panel-text
+          v-for="(list, ind) of item.nestedList"
+          :key="ind"
+          class="menu__item"
+          :class="{ 'menu__item-active': activeMenuItem === list }"
+          @click="openPage(list)"
         >
-        <v-expansion-panel-text> Some content </v-expansion-panel-text>
-        <v-expansion-panel-text> Some content </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-
-    <v-expansion-panels v-model="panel2" :disabled="disabled" multiple>
-      <v-expansion-panel class="expansion__panel">
-        <v-expansion-panel-title expand-icon="" collapse-icon=""
-          >Panel 2</v-expansion-panel-title
-        >
-        <v-expansion-panel-text class="menu__item" @click="openPage('Load')">
-          Open Load
+          {{ list }}
         </v-expansion-panel-text>
-        <v-expansion-panel-text class="menu__item" @click="openPage('')">
-          Some content
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-
-    <v-expansion-panels v-model="panel3" :disabled="disabled" multiple>
-      <v-expansion-panel class="expansion__panel">
-        <v-expansion-panel-title expand-icon="" collapse-icon=""
-          >Panel 3</v-expansion-panel-title
-        >
-        <v-expansion-panel-text> Some content </v-expansion-panel-text>
-        <v-expansion-panel-text> Some content </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
@@ -47,17 +36,42 @@ export default {
   data() {
     return {
       img,
-      panel1: [],
-      panel2: [],
-      panel3: [],
+      menuListItems: [
+        {
+          item: [],
+          list: "Логистика",
+          nestedList: ["Новая стараница", "aaaaaaaa"],
+        },
+        {
+          item: [],
+          list: "Перевозчики",
+          nestedList: ["Задачи", "Аналитика"],
+        },
+        { item: [], list: "Адреса", nestedList: ["cccccccc", " vvvvvvv"] },
+      ],
+
       disabled: false,
       readonly: false,
+      activeMenuItem: null,
     };
+  },
+
+  watch: {
+    "$route.path"() {
+      if (this.$route.path === "/load") {
+        this.activeMenuItem = "Аналитика";
+      }
+    },
   },
 
   methods: {
     openPage(page) {
-      this.$emit("open-page", page);
+      this.activeMenuItem = page;
+      if (page === "Аналитика") {
+        this.$router.push("/load");
+      } else {
+        this.$router.push("/");
+      }
     },
   },
 };
@@ -80,5 +94,23 @@ export default {
 }
 .menu__item {
   cursor: pointer;
+  div {
+    padding: 8px 24px !important;
+  }
+}
+.menu__item-active {
+  color: #fd8301;
+  position: relative;
+  transition: 0.3s;
+
+  &::before {
+    content: "";
+    position: absolute;
+    background-color: #fd8301;
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
 }
 </style>
