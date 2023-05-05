@@ -6,7 +6,7 @@ export default {
   },
   mutations: {
     createColumn(state, productItem) {
-      state.columns.unshift(productItem);
+      state.products.push(productItem);
     },
   },
   state: {

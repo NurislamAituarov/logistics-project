@@ -2,8 +2,8 @@
   <v-table
     ref="table"
     theme="dark"
-    height="auto"
     fixed-header
+    height="600"
     class="data__table"
   >
     <thead>

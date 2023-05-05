@@ -1,8 +1,17 @@
 <template>
   <div class="block__add">
-    <BaseBtn color="black" :height="35" @click="$emit('add-load')">
-      <BaseIcon name="plus" width="13px" color="white" />
-      Добавить строку
+    <BaseBtn color="black" height="40" width="207" @click="onAddLoad">
+      <template v-if="!loading">
+        <BaseIcon name="plus" width="13px" color="white" />
+        Добавить строку
+      </template>
+      <template v-else>
+        <v-progress-circular
+          indeterminate
+          color="white"
+          :width="3"
+        ></v-progress-circular>
+      </template>
     </BaseBtn>
   </div>
 </template>
@@ -18,6 +27,23 @@ export default {
   components: {
     BaseIcon,
     BaseBtn,
+  },
+
+  data() {
+    return {
+      loading: false,
+    };
+  },
+
+  methods: {
+    onAddLoad() {
+      this.loading = true;
+
+      setTimeout(() => {
+        this.$emit("add-load");
+        this.loading = false;
+      }, 1000);
+    },
   },
 };
 </script>
