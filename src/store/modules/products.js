@@ -12,6 +12,7 @@ export default {
   state: {
     products: [
       {
+        id: 1,
         one: '',
         action: 'действие',
         name: 'Мраморный щебень фр. 2-5 мм, 25кг',

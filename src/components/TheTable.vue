@@ -1,80 +1,87 @@
 <template>
-  <v-table
+  <v-data-table
     ref="table"
-    theme="dark"
-    fixed-header
-    height="600"
-    class="data__table"
+    v-model:items-per-page="itemsPerPage"
+    :headers="headers"
+    :items="columns"
+    item-value="name"
+    class="elevation-1 data__table"
   >
-    <thead>
+    <template v-slot:item="{ item, index }">
       <tr>
-        <th v-for="item in headers" :key="item.text" class="text-left">
-          {{ item.text }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(item, index) in columns" :key="item.name">
         <td class="d-flex justify-space-around align-center">
           {{ index + 1 }}
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
         <td>
           <div class="wrapper__column tbody__column">
-            {{ item.name }}
+            {{ item.columns.name }}
 
             <div class="tbody__column-redirect"></div>
           </div>
         </td>
         <td>
           <div class="wrapper__column">
-            {{ item.price }}
+            {{ item.columns.price }}
           </div>
         </td>
         <td>
           <div class="wrapper__column">
-            {{ item.quantity }}
+            {{ item.columns.quantity }}
           </div>
         </td>
         <td>
           <div class="wrapper__column">
-            {{ item.product }}
+            {{ item.columns.product }}
           </div>
         </td>
         <td>
-          <div class="wrapper__column">{{ item.total }}</div>
+          <div class="wrapper__column">{{ item.columns.total }}</div>
         </td>
       </tr>
-    </tbody>
-  </v-table>
+    </template>
+  </v-data-table>
 </template>
 
-
 <script>
+import BaseIcon from "@/components/icons/BaseIcon.vue";
+import { VDataTable } from "vuetify/labs/VDataTable";
 import { mapGetters } from "vuex";
-import BaseIcon from "./icons/BaseIcon.vue";
-
 export default {
-  name: "TheTable",
-
+  name: "TheBid",
   components: {
+    VDataTable,
     BaseIcon,
   },
-
   data() {
     return {
+      itemsPerPage: 5,
       headers: [
-        { text: "Действие", sortable: false, value: "action" },
-        { text: "Наименование еденицы", sortable: false, value: "name" },
-        { text: "Цена", sortable: false, value: "price" },
-        { text: "Кол-во", sortable: false, value: "quantity" },
-        { text: "Название товара", sortable: false, value: "product" },
-        { text: "Итого", sortable: false, value: "total" },
+        {
+          title: "Действие",
+          align: "start",
+          sortable: false,
+          key: "action",
+        },
+        {
+          title: "Наименование еденицы",
+          align: "start",
+          sortable: false,
+          key: "name",
+        },
+        { title: "Цена", align: "start", sortable: false, key: "quantity" },
+        { title: "Кол-во", align: "start", sortable: false, key: "price" },
+        {
+          title: "Название товара",
+          align: "start",
+          sortable: false,
+          key: "product",
+        },
+        { title: "Итого", align: "start", sortable: false, key: "total" },
       ],
       columns: [],
     };
   },
-
   computed: {
     ...mapGetters(["getProducts"]),
   },
@@ -103,6 +110,18 @@ export default {
         let row = table.getElementsByTagName("tr")[0],
           cols = row ? row.children : undefined;
         if (!cols) return;
+
+        [...row.children].forEach((el, i) => {
+          el.style.border = "1px solid #cccccc";
+          el.style.borderLeft = "none";
+          if (i === [...row.children].length - 1) {
+            el.style.borderRadius = "0 10px 0 0";
+          }
+          if (i === 0) {
+            el.style.borderLeft = "1px solid #cccccc";
+            el.style.borderRadius = "10px 0 0 0";
+          }
+        });
 
         table.style.overflow = "hidden";
 
@@ -188,16 +207,18 @@ export default {
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
 .data__table {
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.07);
   border-radius: 10px;
+
+  .v-table .v-table__wrapper > table > thead > tr > th,
+  th {
+    border: 1px solid grey !important;
+    border-left: 0px !important;
+  }
 }
-.v-table--fixed-header > .v-table__wrapper > table > thead > tr > th,
-th {
-  border: 1px solid grey !important;
-  border-left: 0px !important;
-}
+
 .v-table--fixed-header
   > .v-table__wrapper
   > table
@@ -217,7 +238,6 @@ td {
   padding: 10px 15px;
   border: 1px solid#cccccc;
   border-radius: 5px;
-  box-shadow: 0 5px 20px 0 black;
 }
 
 .tbody__column {
