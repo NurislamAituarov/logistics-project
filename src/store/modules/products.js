@@ -3,10 +3,17 @@ export default {
     async fetchColumn({ commit }, productItem) {
       commit('createColumn', productItem);
     },
+
+    setChangeColumns({ commit }, active) {
+      commit('setChangeColumns', active);
+    },
   },
   mutations: {
     createColumn(state, productItem) {
       state.products.push(productItem);
+    },
+    setChangeColumns(state, active) {
+      state.changeColumns = active;
     },
   },
   state: {
@@ -46,10 +53,15 @@ export default {
         total: '15623',
       },
     ],
+    changeColumns: false,
   },
   getters: {
     getProducts(state) {
       return state.products;
+    },
+
+    getChangeColumns(state) {
+      return state.changeColumns;
     },
   },
 };

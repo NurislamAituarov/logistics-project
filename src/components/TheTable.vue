@@ -46,9 +46,9 @@
 <script>
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
-  name: "TheBid",
+  name: "TheTable",
   components: {
     VDataTable,
     BaseIcon,
@@ -80,26 +80,63 @@ export default {
         { title: "Итого", align: "start", sortable: false, key: "total" },
       ],
       columns: [],
+      size: {},
     };
   },
   computed: {
-    ...mapGetters(["getProducts"]),
+    ...mapGetters(["getProducts", "getValue", "getChangeColumns"]),
   },
 
   watch: {
     getColumns(items) {
       this.columns = items;
     },
+
+    getChangeColumns(value) {
+      console.log(value);
+      if (value) {
+        this.updateSizeColumn();
+        this.setChangeColumns(false);
+      }
+    },
   },
 
   mounted() {
     this.columns = this.getProducts;
+    this.getValue("size_column_1");
+
     setTimeout(() => {
       this.getDataTableHTML();
     });
   },
 
   methods: {
+    ...mapActions(["setValue", "setChangeColumns"]),
+
+    updateSizeColumn() {
+      console.log("5s");
+      const column1 = this.getValue("size_column_1");
+      const column2 = this.getValue("size_column_2");
+      const column3 = this.getValue("size_column_3");
+      const column4 = this.getValue("size_column_4");
+      const column5 = this.getValue("size_column_5");
+      let tables = document.getElementsByTagName("table");
+      for (let i = 0; i < tables.length; i++) {
+        resizableGrid(tables[i]);
+      }
+      function resizableGrid(table) {
+        let row = table.getElementsByTagName("tr")[0],
+          cols = row ? row.children : undefined;
+        for (let i = 0; i < cols.length; i++) {
+          if (column1 && i + 1 === 1) cols[i].style.width = `${column1}px`;
+          if (column2 && i + 1 === 2) cols[i].style.width = `${column2}px`;
+          if (column3 && i + 1 === 3) cols[i].style.width = `${column3}px`;
+          if (column4 && i + 1 === 4) cols[i].style.width = `${column4}px`;
+          if (column4 && i + 1 === 5) cols[i].style.width = `${column5}px`;
+        }
+      }
+    },
+
     getDataTableHTML() {
       let tables = document.getElementsByTagName("table");
       for (let i = 0; i < tables.length; i++) {
@@ -112,13 +149,13 @@ export default {
         if (!cols) return;
 
         [...row.children].forEach((el, i) => {
-          el.style.border = "1px solid #cccccc";
+          el.style.borderRight = "1px solid rgb(0, 0, 0, 0.12)";
           el.style.borderLeft = "none";
           if (i === [...row.children].length - 1) {
             el.style.borderRadius = "0 10px 0 0";
+            el.style.borderRight = "none";
           }
           if (i === 0) {
-            el.style.borderLeft = "1px solid #cccccc";
             el.style.borderRadius = "10px 0 0 0";
           }
         });
@@ -131,10 +168,10 @@ export default {
           let div = createDiv(tableHeight);
           cols[i].appendChild(div);
           cols[i].style.position = "relative";
-          setListeners(div);
+          setListeners(div, i);
         }
 
-        function setListeners(div) {
+        function setListeners(div, index) {
           let pageX, curCol, nxtCol, curColWidth, nxtColWidth;
 
           div.addEventListener("mousedown", function (e) {
@@ -159,10 +196,13 @@ export default {
           document.addEventListener("mousemove", function (e) {
             if (curCol) {
               let diffX = e.pageX - pageX;
-
               if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
-
               curCol.style.width = curColWidth + diffX + "px";
+
+              localStorage.setItem(
+                `size_column_${index + 1}`,
+                JSON.stringify(curColWidth + diffX)
+              );
             }
           });
 
@@ -211,26 +251,21 @@ export default {
 .data__table {
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.07);
   border-radius: 10px;
-
-  .v-table .v-table__wrapper > table > thead > tr > th,
-  th {
-    border: 1px solid grey !important;
-    border-left: 0px !important;
-  }
-}
-
-.v-table--fixed-header
-  > .v-table__wrapper
-  > table
-  > thead
-  > tr
-  > th:nth-child(1),
-th:nth-child(1) {
-  border: 1px solid grey !important;
+  border: 1px solid rgb(0, 0, 0, 0.12) !important;
 }
 
 td {
   border: none !important;
+}
+.v-data-table ::v-deep th {
+  font-family: MyriadPro;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: black !important;
 }
 
 .wrapper__column {
@@ -250,6 +285,7 @@ td {
   letter-spacing: normal;
   overflow: hidden;
   padding-right: 25px;
+  color: black;
 }
 
 .tbody__column-redirect {
