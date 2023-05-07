@@ -11,6 +11,7 @@
         <v-window-item value="one"> One </v-window-item>
 
         <v-window-item value="two" class="pa-5">
+          <btn @click="onSave">Save</btn>
           <TheAddLine @add-load="addLoad" />
           <TheTable />
         </v-window-item>
@@ -37,7 +38,7 @@ export default {
   components: { TheAddLine, TheTable },
 
   methods: {
-    ...mapActions(["fetchColumn"]),
+    ...mapActions(["fetchColumn", "setChangeColumns"]),
 
     addLoad() {
       this.fetchColumn({
@@ -53,6 +54,10 @@ export default {
 
     openPage(page) {
       this.page = page;
+    },
+
+    onSave() {
+      this.setChangeColumns(true);
     },
   },
 };
