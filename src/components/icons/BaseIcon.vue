@@ -3,7 +3,7 @@
     <svg
       class="icon"
       :width="width || 3"
-      height="13px"
+      :height="height || 13"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       v-html="path"
@@ -16,7 +16,7 @@
 import icons from "./icons";
 
 export default {
-  props: ["name", "color", "shadow", "width"],
+  props: ["name", "color", "shadow", "width", "height"],
 
   data() {
     return {
