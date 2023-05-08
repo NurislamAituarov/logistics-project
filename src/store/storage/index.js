@@ -12,6 +12,7 @@ export default {
     size_column_3: getItem(storage.size_column_3),
     size_column_4: getItem(storage.size_column_4),
     size_column_5: getItem(storage.size_column_5),
+    size_column_6: getItem(storage.size_column_6),
   },
   getters: {
     getValue: (state) => (key) => {

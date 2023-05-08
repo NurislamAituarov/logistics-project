@@ -11,9 +11,8 @@
         <v-window-item value="one"> One </v-window-item>
 
         <v-window-item value="two" class="pa-5">
-          <btn @click="onSave">Save</btn>
           <TheAddLine @add-load="addLoad" />
-          <TheTable />
+          <TheTable :saveTemplate="saveTemplate" @on-save="onSave" />
         </v-window-item>
 
         <v-window-item value="three"> Three </v-window-item>
@@ -34,6 +33,7 @@ export default {
   data: () => ({
     tab: null,
     page: "",
+    saveTemplate: false,
   }),
   components: { TheAddLine, TheTable },
 
@@ -57,7 +57,10 @@ export default {
     },
 
     onSave() {
-      this.setChangeColumns(true);
+      this.saveTemplate = true;
+      setTimeout(() => {
+        this.saveTemplate = false;
+      }, 1000);
     },
   },
 };

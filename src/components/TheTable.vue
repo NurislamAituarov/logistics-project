@@ -1,4 +1,35 @@
 <template>
+  <div class="extra_line">
+    <div class="d-flex align-center">
+      <p
+        v-if="!saveTemplate"
+        @click="$emit('on-save')"
+        class="btn-save_template mr-5"
+      >
+        Сохранить изменение
+      </p>
+      <p v-else class="btn-save_template mr-5">Сохранено</p>
+      <v-menu :location="location">
+        <template v-slot:activator="{ props }">
+          <BaseIcon
+            class="btn_setting"
+            name="setting"
+            width="16"
+            height="16"
+            color="#1253a2"
+            v-bind="props"
+          />
+        </template>
+
+        <v-list class="setting_list">
+          <v-list-item v-for="(item, index) in items" :key="index">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+  </div>
+
   <v-data-table
     ref="table"
     v-model:items-per-page="itemsPerPage"
@@ -47,12 +78,18 @@
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "TheTable",
   components: {
     VDataTable,
     BaseIcon,
   },
+
+  props: {
+    saveTemplate: { type: Boolean, default: false },
+  },
+
   data() {
     return {
       itemsPerPage: 5,
@@ -80,7 +117,9 @@ export default {
         { title: "Итого", align: "start", sortable: false, key: "total" },
       ],
       columns: [],
-      size: {},
+
+      items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
+      location: "bottom",
     };
   },
   computed: {
@@ -92,19 +131,16 @@ export default {
       this.columns = items;
     },
 
-    getChangeColumns(value) {
-      console.log(value);
+    saveTemplate(value) {
       if (value) {
-        this.updateSizeColumn();
-        this.setChangeColumns(false);
+        this.saveTemplateSizeColumn();
       }
     },
   },
 
   mounted() {
     this.columns = this.getProducts;
-    this.getValue("size_column_1");
-
+    this.updateSizeColumn();
     setTimeout(() => {
       this.getDataTableHTML();
     });
@@ -113,13 +149,7 @@ export default {
   methods: {
     ...mapActions(["setValue", "setChangeColumns"]),
 
-    updateSizeColumn() {
-      console.log("5s");
-      const column1 = this.getValue("size_column_1");
-      const column2 = this.getValue("size_column_2");
-      const column3 = this.getValue("size_column_3");
-      const column4 = this.getValue("size_column_4");
-      const column5 = this.getValue("size_column_5");
+    saveTemplateSizeColumn() {
       let tables = document.getElementsByTagName("table");
       for (let i = 0; i < tables.length; i++) {
         resizableGrid(tables[i]);
@@ -128,11 +158,36 @@ export default {
         let row = table.getElementsByTagName("tr")[0],
           cols = row ? row.children : undefined;
         for (let i = 0; i < cols.length; i++) {
-          if (column1 && i + 1 === 1) cols[i].style.width = `${column1}px`;
-          if (column2 && i + 1 === 2) cols[i].style.width = `${column2}px`;
-          if (column3 && i + 1 === 3) cols[i].style.width = `${column3}px`;
-          if (column4 && i + 1 === 4) cols[i].style.width = `${column4}px`;
-          if (column4 && i + 1 === 5) cols[i].style.width = `${column5}px`;
+          localStorage.setItem(
+            `size_column_${i + 1}`,
+            JSON.stringify(cols[i].style.width)
+          );
+        }
+      }
+    },
+
+    updateSizeColumn() {
+      const column1 = this.getValue("size_column_1");
+      const column2 = this.getValue("size_column_2");
+      const column3 = this.getValue("size_column_3");
+      const column4 = this.getValue("size_column_4");
+      const column5 = this.getValue("size_column_5");
+      const column6 = this.getValue("size_column_6");
+
+      let tables = document.getElementsByTagName("table");
+      for (let i = 0; i < tables.length; i++) {
+        resizableGrid(tables[i]);
+      }
+      function resizableGrid(table) {
+        let row = table.getElementsByTagName("tr")[0],
+          cols = row ? row.children : undefined;
+        for (let i = 0; i < cols.length; i++) {
+          if (column1 && i + 1 === 1) cols[i].style.width = `${column1}`;
+          if (column2 && i + 1 === 2) cols[i].style.width = `${column2}`;
+          if (column3 && i + 1 === 3) cols[i].style.width = `${column3}`;
+          if (column4 && i + 1 === 4) cols[i].style.width = `${column4}`;
+          if (column5 && i + 1 === 5) cols[i].style.width = `${column5}`;
+          if (column6 && i + 1 === 6) cols[i].style.width = `${column6}`;
         }
       }
     },
@@ -168,10 +223,10 @@ export default {
           let div = createDiv(tableHeight);
           cols[i].appendChild(div);
           cols[i].style.position = "relative";
-          setListeners(div, i);
+          setListeners(div);
         }
 
-        function setListeners(div, index) {
+        function setListeners(div) {
           let pageX, curCol, nxtCol, curColWidth, nxtColWidth;
 
           div.addEventListener("mousedown", function (e) {
@@ -198,11 +253,6 @@ export default {
               let diffX = e.pageX - pageX;
               if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
               curCol.style.width = curColWidth + diffX + "px";
-
-              localStorage.setItem(
-                `size_column_${index + 1}`,
-                JSON.stringify(curColWidth + diffX)
-              );
             }
           });
 
@@ -298,5 +348,34 @@ td {
 }
 .tbody__column-redirect:hover {
   cursor: pointer;
+}
+
+.btn_setting {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.setting_list {
+  width: max-content !important;
+}
+
+.extra_line {
+  width: 100%;
+  height: 50px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 10px 10px 0 0;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-right: 15px;
+}
+
+.btn-save_template {
+  cursor: pointer;
+  &:hover {
+    color: #1253a2;
+    transition: 0.3s;
+  }
 }
 </style>
