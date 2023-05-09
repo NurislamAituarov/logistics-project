@@ -22,6 +22,7 @@
             width="16"
             height="16"
             color="#a6b7d4"
+            :activator="props"
             v-bind="props"
           />
         </template>
@@ -80,9 +81,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import Sortable from "sortablejs";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
-import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "TheTable",
@@ -149,6 +151,17 @@ export default {
     this.updateSizeColumn();
     setTimeout(() => {
       this.getDataTableHTML();
+    });
+
+    let table = document.querySelector("table tbody");
+    const _self = this;
+    _self.desserts = _self.desserts ?? [];
+    Sortable.create(table, {
+      onEnd({ newIndex, oldIndex }) {
+        const rowSelected = _self.desserts.splice(oldIndex, 1)[0];
+        _self.desserts.splice(newIndex, 0, rowSelected);
+      },
+      ghostClass: "sortable-ghost",
     });
   },
 
@@ -393,5 +406,11 @@ td {
     color: #1253a2;
     transition: 0.3s;
   }
+}
+
+.sortable-ghost {
+  border: 1px dashed red !important;
+  background: red;
+  display: none;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="d-flex align-center" :class="{ container__icon: shadow }">
     <svg
       class="icon"
-      :class="settingHover"
+      :class="classSetting"
       :width="width || 3"
       :height="height || 13"
       xmlns="http://www.w3.org/2000/svg"
@@ -17,21 +17,28 @@
 import icons from "./icons";
 
 export default {
-  props: ["name", "color", "shadow", "width", "height"],
+  props: ["name", "color", "shadow", "width", "height", "activator"],
 
   data() {
     return {
       path: icons[this.name],
       fill: icons[this.color],
+      classSetting: "",
     };
   },
 
-  computed: {
-    settingHover() {
-      if (this.name === "setting") return "setting_hover";
-
-      return "";
+  watch: {
+    activator(value) {
+      if (value["aria-expanded"] === "true") {
+        this.classSetting = "setting_active";
+      } else {
+        this.classSetting = "";
+      }
     },
+  },
+
+  mounted() {
+    if (this.name === "setting") this.classSetting = "setting_hover";
   },
 };
 </script>
@@ -58,6 +65,10 @@ export default {
 }
 
 .setting_hover:hover {
+  fill: #1253a2;
+  transition: 0.3s;
+}
+.setting_active {
   fill: #1253a2;
   transition: 0.3s;
 }
