@@ -2,13 +2,18 @@
   <div class="extra_line">
     <div class="d-flex align-center">
       <p
-        v-if="!saveTemplate"
-        @click="$emit('on-save')"
+        v-if="saveChange && saveChange === 'change'"
+        @click="onSave"
         class="btn-save_template mr-5"
       >
         Сохранить изменение
       </p>
-      <p v-else class="btn-save_template mr-5">Сохранено</p>
+      <p
+        v-if="saveChange && saveChange === 'pending'"
+        class="btn-save_template mr-5"
+      >
+        Сохранено
+      </p>
       <v-menu :location="location">
         <template v-slot:activator="{ props }">
           <BaseIcon
@@ -16,7 +21,7 @@
             name="setting"
             width="16"
             height="16"
-            color="#1253a2"
+            color="#a6b7d4"
             v-bind="props"
           />
         </template>
@@ -117,6 +122,7 @@ export default {
         { title: "Итого", align: "start", sortable: false, key: "total" },
       ],
       columns: [],
+      saveChange: false,
 
       items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
       location: "bottom",
@@ -194,6 +200,7 @@ export default {
 
     getDataTableHTML() {
       let tables = document.getElementsByTagName("table");
+      const thisCopy = this;
       for (let i = 0; i < tables.length; i++) {
         resizableGrid(tables[i]);
       }
@@ -250,6 +257,7 @@ export default {
 
           document.addEventListener("mousemove", function (e) {
             if (curCol) {
+              thisCopy.saveChange = "change";
               let diffX = e.pageX - pageX;
               if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
               curCol.style.width = curColWidth + diffX + "px";
@@ -292,6 +300,14 @@ export default {
         }
       }
     },
+
+    onSave() {
+      this.saveChange = "pending";
+      this.$emit("on-save");
+      setTimeout(() => {
+        this.saveChange = false;
+      }, 500);
+    },
   },
 };
 </script>
@@ -300,7 +316,7 @@ export default {
 <style scoped lang="scss">
 .data__table {
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.07);
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
   border: 1px solid rgb(0, 0, 0, 0.12) !important;
 }
 
