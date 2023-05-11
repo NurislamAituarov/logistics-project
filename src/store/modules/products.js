@@ -19,10 +19,9 @@ export default {
   state: {
     products: [
       {
-        id: 1,
         one: '',
         action: 'действие',
-        name: 'Мраморный щебень фр. 2-5 мм, 25кг',
+        name: 'Серебренный щебень фр. 2-5 мм, 25кг',
         price: 1203,
         quantity: 24,
         product: 'Мраморный щебе',
@@ -30,7 +29,7 @@ export default {
       },
       {
         action: 'действие',
-        name: 'Мраморный щебень фр. 2-5 мм, 25кг',
+        name: 'Золотой щебень фр. 2-5 мм, 25кг',
         price: 1203,
         quantity: 24,
         product: 'Мраморный щебе',

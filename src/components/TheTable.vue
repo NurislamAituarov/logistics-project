@@ -22,6 +22,7 @@
             width="16"
             height="16"
             color="#a6b7d4"
+            :activator="props"
             v-bind="props"
           />
         </template>
@@ -37,42 +38,76 @@
 
   <v-data-table
     ref="table"
-    v-model:items-per-page="itemsPerPage"
     :headers="headers"
     :items="columns"
+    :items-per-page="itemsPerPage"
+    :pagination="pagination"
+    select-all
+    hide-default-footer
+    height="400"
+    fixed-header
     item-value="name"
     class="elevation-1 data__table"
   >
+    <template v-slot:headers="{ headers }">
+      <tr id="sort_key">
+        <th
+          v-for="header of headers.flat()"
+          :key="header.title"
+          :class="[
+            'column sortable',
+            pagination.descending ? 'desc' : 'asc',
+            header.value === pagination.sortBy ? 'active' : '',
+          ]"
+        >
+          {{ header.title }}
+        </th>
+      </tr>
+    </template>
+
     <template v-slot:item="{ item, index }">
       <tr>
         <td class="d-flex justify-space-around align-center">
+          <v-icon class="sortable rowHandle">mdi-drag</v-icon>
+          <BaseIcon
+            class="combined-shape rowHandle"
+            name="drag"
+            width="11"
+            color="#A6B7D4"
+            shadow="true"
+          />
           {{ index + 1 }}
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
         <td>
           <div class="wrapper__column tbody__column">
             {{ item.columns.name }}
-
             <div class="tbody__column-redirect"></div>
           </div>
         </td>
         <td>
           <div class="wrapper__column">
-            {{ item.columns.price }}
+            <!-- {{ item.columns.price }} -->
+            {{ item.columns[headers[2]["key"]] }}
           </div>
         </td>
         <td>
           <div class="wrapper__column">
-            {{ item.columns.quantity }}
+            <!-- {{ item.columns.quantity }} -->
+            {{ item.columns[headers[3]["key"]] }}
           </div>
         </td>
         <td>
           <div class="wrapper__column">
-            {{ item.columns.product }}
+            <!-- {{ item.columns.product }} -->
+            {{ item.columns[headers[4]["key"]] }}
           </div>
         </td>
         <td>
-          <div class="wrapper__column">{{ item.columns.total }}</div>
+          <div class="wrapper__column">
+            <!-- {{ item.columns.total }}  -->
+            {{ item.columns[headers[5]["key"]] }}
+          </div>
         </td>
       </tr>
     </template>
@@ -80,9 +115,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import Sortable from "sortablejs";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
-import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "TheTable",
@@ -97,7 +133,7 @@ export default {
 
   data() {
     return {
-      itemsPerPage: 5,
+      itemsPerPage: 25,
       headers: [
         {
           title: "Действие",
@@ -111,8 +147,8 @@ export default {
           sortable: false,
           key: "name",
         },
-        { title: "Цена", align: "start", sortable: false, key: "quantity" },
-        { title: "Кол-во", align: "start", sortable: false, key: "price" },
+        { title: "Цена", align: "start", sortable: false, key: "price" },
+        { title: "Кол-во", align: "start", sortable: false, key: "quantity" },
         {
           title: "Название товара",
           align: "start",
@@ -126,6 +162,11 @@ export default {
 
       items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
       location: "bottom",
+
+      pagination: {
+        sortBy: "name",
+      },
+      selected: [],
     };
   },
   computed: {
@@ -133,8 +174,12 @@ export default {
   },
 
   watch: {
-    getColumns(items) {
-      this.columns = items;
+    getProducts: {
+      handler(newValue) {
+        this.columns = newValue;
+        this.itemsPerPage = newValue.length;
+      },
+      deep: true,
     },
 
     saveTemplate(value) {
@@ -142,18 +187,58 @@ export default {
         this.saveTemplateSizeColumn();
       }
     },
+
+    // columns: {
+    //   handler(newValue) {
+    //     this.columns = newValue;
+    //   },
+    //   deep: true,
+    // },
   },
 
   mounted() {
     this.columns = this.getProducts;
+
     this.updateSizeColumn();
     setTimeout(() => {
       this.getDataTableHTML();
     });
+
+    let table = document.querySelector("table tbody");
+    const _self = this;
+    Sortable.create(table, {
+      handle: ".rowHandle",
+      onEnd({ newIndex, oldIndex }) {
+        // const rowSelected = _self.columns.splice(oldIndex, 1)[0];
+        // _self.columns.splice(newIndex, 0, rowSelected);
+        console.log(oldIndex, newIndex, _self.columns);
+      },
+      ghostClass: "sortable-ghost",
+    });
+    // Sort Columns
+
+    this.$nextTick(() => {
+      const element = document.getElementById("sort_key");
+
+      const _self = this;
+      Sortable.create(element, {
+        onEnd({ newIndex, oldIndex }) {
+          const headerSelected = _self.headers.splice(oldIndex, 1)[0];
+          _self.headers.splice(newIndex, 0, headerSelected);
+        },
+      });
+    });
+  },
+
+  updated() {
+    console.log("update");
   },
 
   methods: {
     ...mapActions(["setValue", "setChangeColumns"]),
+    onDragEnd(event) {
+      this.headers = event.list;
+    },
 
     saveTemplateSizeColumn() {
       let tables = document.getElementsByTagName("table");
@@ -308,6 +393,8 @@ export default {
         this.saveChange = false;
       }, 500);
     },
+
+    // Sort Columns
   },
 };
 </script>
@@ -322,7 +409,11 @@ export default {
 
 td {
   border: none !important;
+  &:not(:first-child) {
+    // pointer-events: none;
+  }
 }
+
 .v-data-table ::v-deep th {
   font-family: MyriadPro;
   font-size: 16px !important;
@@ -332,6 +423,16 @@ td {
   line-height: normal;
   letter-spacing: normal;
   color: black !important;
+}
+.v-data-table ::v-deep .v-table__wrapper {
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: white;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #a6b7d4;
+    border-radius: 5px;
+  }
 }
 
 .wrapper__column {
@@ -393,5 +494,25 @@ td {
     color: #1253a2;
     transition: 0.3s;
   }
+}
+
+.sortable-ghost {
+  border: 1px dashed red !important;
+  background: red;
+  // display: none;
+}
+
+.combined-shape {
+  cursor: pointer;
+}
+
+.v-data-table ::v-deep .v-data-table-footer {
+  display: none;
+}
+
+.myCheckBox .v-icon {
+  opacity: 0.6 !important;
+  font-size: 24px !important;
+  transform: none !important;
 }
 </style>
