@@ -45,18 +45,17 @@ export default {
 
 <style scoped>
 .container__icon {
-  width: 22px;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  padding: 0 8px;
 }
 
 .container__icon:hover {
   background-color: #a6b7d4;
   cursor: pointer;
-
   transition: 0.3s;
 }
 
