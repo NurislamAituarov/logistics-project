@@ -67,7 +67,7 @@
     </template>
 
     <template v-slot:item="{ item, index }">
-      <tr>
+      <tr :key="componentKey">
         <td class="d-flex justify-space-between align-center">
           <BaseIcon
             class="combined-shape rowHandle"
@@ -84,7 +84,6 @@
             class="wrapper__column"
             :class="{ tbody__column: headers[1].key === 'name' }"
           >
-            <!-- {{ item.columns.name }} -->
             {{ item.columns[headers[1]["key"]] }}
             <div
               v-if="headers[1].key === 'name'"
@@ -106,7 +105,6 @@
         </td>
         <td>
           <div class="wrapper__column">
-            <!-- {{ item.columns.quantity }} -->
             {{ item.columns[headers[3]["key"]] }}
             <div
               v-if="headers[3].key === 'name'"
@@ -194,6 +192,8 @@ export default {
       selected: [],
 
       newOrderHeaders: [],
+
+      componentKey: 0,
     };
   },
   computed: {
@@ -231,12 +231,14 @@ export default {
       deep: true,
     },
 
-    // columns: {
-    //   handler(newValue) {
-    //     this.columns = newValue;
-    //   },
-    //   deep: true,
-    // },
+    columns: {
+      handler(newValue) {
+        if (newValue) {
+          this.componentKey += 1;
+        }
+      },
+      deep: true,
+    },
   },
 
   mounted() {
@@ -253,9 +255,8 @@ export default {
     Sortable.create(table, {
       handle: ".rowHandle",
       onEnd({ newIndex, oldIndex }) {
-        // const rowSelected = _self.columns.splice(oldIndex, 1)[0];
-        // _self.columns.splice(newIndex, 0, rowSelected);
-        console.log(oldIndex, newIndex, _self.columns);
+        const rowSelected = _self.columns.splice(oldIndex, 1)[0];
+        _self.columns.splice(newIndex, 0, rowSelected);
       },
       ghostClass: "sortable-ghost",
     });
@@ -445,7 +446,6 @@ export default {
     setNewOrderHeaders(newValue) {
       this.setValue({ name: "new_order_headers", value: newValue });
     },
-    // Sort Columns
   },
 };
 </script>
