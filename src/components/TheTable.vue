@@ -57,7 +57,8 @@
           :class="[
             'column sortable',
             pagination.descending ? 'desc' : 'asc',
-            header.value === pagination.sortBy ? 'active' : '',
+            header.key === pagination.sortBy ? 'active' : '',
+            header.key === 'action' ? 'column_action' : '',
           ]"
         >
           {{ header.title }}
@@ -67,46 +68,70 @@
 
     <template v-slot:item="{ item, index }">
       <tr>
-        <td class="d-flex justify-space-around align-center">
-          <v-icon class="sortable rowHandle">mdi-drag</v-icon>
+        <td class="d-flex justify-space-between align-center">
           <BaseIcon
             class="combined-shape rowHandle"
-            name="drag"
-            width="11"
+            name="dragV2"
+            width="20"
+            height="20"
             color="#A6B7D4"
-            shadow="true"
           />
           {{ index + 1 }}
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
         <td>
-          <div class="wrapper__column tbody__column">
-            {{ item.columns.name }}
-            <div class="tbody__column-redirect"></div>
+          <div
+            class="wrapper__column"
+            :class="{ tbody__column: headers[1].key === 'name' }"
+          >
+            <!-- {{ item.columns.name }} -->
+            {{ item.columns[headers[1]["key"]] }}
+            <div
+              v-if="headers[1].key === 'name'"
+              class="tbody__column-redirect"
+            >
+              <p class="right-arrow_2"></p>
+            </div>
           </div>
         </td>
         <td>
           <div class="wrapper__column">
             <!-- {{ item.columns.price }} -->
             {{ item.columns[headers[2]["key"]] }}
+            <div
+              v-if="headers[2].key === 'name'"
+              class="tbody__column-redirect"
+            ></div>
           </div>
         </td>
         <td>
           <div class="wrapper__column">
             <!-- {{ item.columns.quantity }} -->
             {{ item.columns[headers[3]["key"]] }}
+            <div
+              v-if="headers[3].key === 'name'"
+              class="tbody__column-redirect"
+            ></div>
           </div>
         </td>
         <td>
           <div class="wrapper__column">
             <!-- {{ item.columns.product }} -->
             {{ item.columns[headers[4]["key"]] }}
+            <div
+              v-if="headers[4].key === 'name'"
+              class="tbody__column-redirect"
+            ></div>
           </div>
         </td>
         <td>
           <div class="wrapper__column">
             <!-- {{ item.columns.total }}  -->
             {{ item.columns[headers[5]["key"]] }}
+            <div
+              v-if="headers[5].key === 'name'"
+              class="tbody__column-redirect"
+            ></div>
           </div>
         </td>
       </tr>
@@ -167,10 +192,17 @@ export default {
         sortBy: "name",
       },
       selected: [],
+
+      newOrderHeaders: [],
     };
   },
   computed: {
-    ...mapGetters(["getProducts", "getValue", "getChangeColumns"]),
+    ...mapGetters([
+      "getHeaders",
+      "getProducts",
+      "getValue",
+      "getChangeColumns",
+    ]),
   },
 
   watch: {
@@ -188,6 +220,17 @@ export default {
       }
     },
 
+    getHeaders(items) {
+      this.headers = items;
+    },
+
+    headers: {
+      handler(newValue) {
+        this.newOrderHeaders = newValue;
+      },
+      deep: true,
+    },
+
     // columns: {
     //   handler(newValue) {
     //     this.columns = newValue;
@@ -198,6 +241,7 @@ export default {
 
   mounted() {
     this.columns = this.getProducts;
+    this.headers = this.getValue("new_order_headers") || this.getHeaders;
 
     this.updateSizeColumn();
     setTimeout(() => {
@@ -215,6 +259,7 @@ export default {
       },
       ghostClass: "sortable-ghost",
     });
+
     // Sort Columns
 
     this.$nextTick(() => {
@@ -225,6 +270,7 @@ export default {
         onEnd({ newIndex, oldIndex }) {
           const headerSelected = _self.headers.splice(oldIndex, 1)[0];
           _self.headers.splice(newIndex, 0, headerSelected);
+          _self.saveChange = "change";
         },
       });
     });
@@ -301,6 +347,7 @@ export default {
           if (i === [...row.children].length - 1) {
             el.style.borderRadius = "0 10px 0 0";
             el.style.borderRight = "none";
+            el.style.pointerEvents = "none";
           }
           if (i === 0) {
             el.style.borderRadius = "10px 0 0 0";
@@ -389,11 +436,15 @@ export default {
     onSave() {
       this.saveChange = "pending";
       this.$emit("on-save");
+      this.setNewOrderHeaders(this.newOrderHeaders);
       setTimeout(() => {
         this.saveChange = false;
       }, 500);
     },
 
+    setNewOrderHeaders(newValue) {
+      this.setValue({ name: "new_order_headers", value: newValue });
+    },
     // Sort Columns
   },
 };
@@ -409,20 +460,23 @@ export default {
 
 td {
   border: none !important;
+
   &:not(:first-child) {
-    // pointer-events: none;
   }
 }
 
-.v-data-table ::v-deep th {
-  font-family: MyriadPro;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: black !important;
+.v-data-table ::v-deep {
+  th {
+    font-family: MyriadPro;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: black !important;
+    cursor: move;
+  }
 }
 .v-data-table ::v-deep .v-table__wrapper {
   &::-webkit-scrollbar {
@@ -462,6 +516,15 @@ td {
   width: 21px;
   height: 100%;
   background-color: #cccccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .right-arrow_2 {
+    border: 5px solid transparent;
+    display: inline-flex;
+    border-left: 5px solid gray;
+    border-right: none;
+  }
 }
 .tbody__column-redirect:hover {
   cursor: pointer;
@@ -510,9 +573,7 @@ td {
   display: none;
 }
 
-.myCheckBox .v-icon {
-  opacity: 0.6 !important;
-  font-size: 24px !important;
-  transform: none !important;
+.column_action {
+  pointer-events: none;
 }
 </style>

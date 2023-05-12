@@ -13,6 +13,8 @@ export default {
     size_column_4: getItem(storage.size_column_4),
     size_column_5: getItem(storage.size_column_5),
     size_column_6: getItem(storage.size_column_6),
+
+    new_order_headers: getItem(storage.new_order_headers),
   },
   getters: {
     getValue: (state) => (key) => {

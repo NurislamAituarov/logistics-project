@@ -38,7 +38,8 @@ export default {
   },
 
   mounted() {
-    if (this.name === "setting") this.classSetting = "setting_hover";
+    if (this.name === "setting" || this.name === "dragV2")
+      this.classSetting = "icon_hover";
   },
 };
 </script>
@@ -49,7 +50,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 3px;
   padding: 0 8px;
 }
 
@@ -63,7 +64,7 @@ export default {
   fill: black;
 }
 
-.setting_hover:hover {
+.icon_hover:hover {
   fill: #1253a2;
   transition: 0.3s;
 }
