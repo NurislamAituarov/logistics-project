@@ -17,6 +17,29 @@ export default {
     },
   },
   state: {
+    headers: [
+      {
+        title: 'Действие',
+        align: 'start',
+        sortable: false,
+        key: 'action',
+      },
+      {
+        title: 'Наименование еденицы',
+        align: 'start',
+        sortable: false,
+        key: 'name',
+      },
+      { title: 'Цена', align: 'start', sortable: false, key: 'price' },
+      { title: 'Кол-во', align: 'start', sortable: false, key: 'quantity' },
+      {
+        title: 'Название товара',
+        align: 'start',
+        sortable: false,
+        key: 'product',
+      },
+      { title: 'Итого', align: 'start', sortable: false, key: 'total' },
+    ],
     products: [
       {
         one: '',
@@ -55,6 +78,10 @@ export default {
     changeColumns: false,
   },
   getters: {
+    getHeaders(state) {
+      return state.headers;
+    },
+
     getProducts(state) {
       return state.products;
     },
