@@ -61,7 +61,7 @@
             header.key === 'action' ? 'column_action' : '',
           ]"
         >
-          {{ header.title }}
+          <div class="headerHandle">{{ header.title }}</div>
         </th>
       </tr>
     </template>
@@ -250,31 +250,10 @@ export default {
       this.getDataTableHTML();
     });
 
-    let table = document.querySelector("table tbody");
-    const _self = this;
-    Sortable.create(table, {
-      handle: ".rowHandle",
-      onEnd({ newIndex, oldIndex }) {
-        const rowSelected = _self.columns.splice(oldIndex, 1)[0];
-        _self.columns.splice(newIndex, 0, rowSelected);
-      },
-      ghostClass: "sortable-ghost",
-    });
-
     // Sort Columns
-
-    this.$nextTick(() => {
-      const element = document.getElementById("sort_key");
-
-      const _self = this;
-      Sortable.create(element, {
-        onEnd({ newIndex, oldIndex }) {
-          const headerSelected = _self.headers.splice(oldIndex, 1)[0];
-          _self.headers.splice(newIndex, 0, headerSelected);
-          _self.saveChange = "change";
-        },
-      });
-    });
+    this.changeSortColumns();
+    // Sort Headers
+    this.changeSortHeaders();
   },
 
   updated() {
@@ -434,6 +413,34 @@ export default {
       }
     },
 
+    changeSortHeaders() {
+      this.$nextTick(() => {
+        const element = document.getElementById("sort_key");
+
+        const _self = this;
+        Sortable.create(element, {
+          handle: ".headerHandle",
+          onEnd({ newIndex, oldIndex }) {
+            const headerSelected = _self.headers.splice(oldIndex, 1)[0];
+            _self.headers.splice(newIndex, 0, headerSelected);
+            _self.saveChange = "change";
+          },
+        });
+      });
+    },
+    changeSortColumns() {
+      let table = document.querySelector("table tbody");
+      const _self = this;
+      Sortable.create(table, {
+        handle: ".rowHandle",
+        onEnd({ newIndex, oldIndex }) {
+          const rowSelected = _self.columns.splice(oldIndex, 1)[0];
+          _self.columns.splice(newIndex, 0, rowSelected);
+        },
+        ghostClass: "sortable-ghost",
+      });
+    },
+
     onSave() {
       this.saveChange = "pending";
       this.$emit("on-save");
@@ -475,7 +482,14 @@ td {
     line-height: normal;
     letter-spacing: normal;
     color: black !important;
-    cursor: move;
+    .headerHandle {
+      // line-height: 46px;
+      cursor: move;
+      height: 80%;
+      cursor: move;
+      display: flex;
+      align-items: center;
+    }
   }
 }
 .v-data-table ::v-deep .v-table__wrapper {
