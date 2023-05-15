@@ -44,7 +44,7 @@
     :pagination="pagination"
     select-all
     hide-default-footer
-    height="400"
+    height="420"
     fixed-header
     item-value="name"
     class="elevation-1 data__table"
@@ -53,13 +53,14 @@
       <tr id="sort_key">
         <th
           v-for="header of headers.flat()"
-          :key="header.title"
+          :key="header.key"
           :class="[
             'column sortable',
             pagination.descending ? 'desc' : 'asc',
             header.key === pagination.sortBy ? 'active' : '',
             header.key === 'action' ? 'column_action' : '',
           ]"
+          :data-order="header.key"
         >
           <div class="headerHandle">{{ header.title }}</div>
         </th>
@@ -67,7 +68,7 @@
     </template>
 
     <template v-slot:item="{ item, index }">
-      <tr :key="componentKey">
+      <tr :key="columnsKey">
         <td class="d-flex justify-space-between align-center">
           <BaseIcon
             class="combined-shape rowHandle"
@@ -100,7 +101,9 @@
             <div
               v-if="headers[2].key === 'name'"
               class="tbody__column-redirect"
-            ></div>
+            >
+              <p class="right-arrow_2"></p>
+            </div>
           </div>
         </td>
         <td>
@@ -109,7 +112,9 @@
             <div
               v-if="headers[3].key === 'name'"
               class="tbody__column-redirect"
-            ></div>
+            >
+              <p class="right-arrow_2"></p>
+            </div>
           </div>
         </td>
         <td>
@@ -119,7 +124,9 @@
             <div
               v-if="headers[4].key === 'name'"
               class="tbody__column-redirect"
-            ></div>
+            >
+              <p class="right-arrow_2"></p>
+            </div>
           </div>
         </td>
         <td>
@@ -129,7 +136,9 @@
             <div
               v-if="headers[5].key === 'name'"
               class="tbody__column-redirect"
-            ></div>
+            >
+              <p class="right-arrow_2"></p>
+            </div>
           </div>
         </td>
       </tr>
@@ -192,8 +201,10 @@ export default {
       selected: [],
 
       newOrderHeaders: [],
+      newOrderLines: [],
 
-      componentKey: 0,
+      columnsKey: 0,
+      headersKey: 0,
     };
   },
   computed: {
@@ -226,6 +237,7 @@ export default {
 
     headers: {
       handler(newValue) {
+        // this.headersKey += 1;
         this.newOrderHeaders = newValue;
       },
       deep: true,
@@ -234,7 +246,8 @@ export default {
     columns: {
       handler(newValue) {
         if (newValue) {
-          this.componentKey += 1;
+          this.columnsKey += 1;
+          this.newOrderLines = newValue;
         }
       },
       deep: true,
@@ -242,7 +255,7 @@ export default {
   },
 
   mounted() {
-    this.columns = this.getProducts;
+    this.columns = this.getValue("new_order_lines") || this.getProducts;
     this.headers = this.getValue("new_order_headers") || this.getHeaders;
 
     this.updateSizeColumn();
@@ -274,37 +287,69 @@ export default {
       function resizableGrid(table) {
         let row = table.getElementsByTagName("tr")[0],
           cols = row ? row.children : undefined;
+
         for (let i = 0; i < cols.length; i++) {
+          const order_name = cols[i].getAttribute("data-order");
+
           localStorage.setItem(
-            `size_column_${i + 1}`,
+            `size_column_${order_name}`,
             JSON.stringify(cols[i].style.width)
           );
         }
       }
     },
-
-    updateSizeColumn() {
-      const column1 = this.getValue("size_column_1");
-      const column2 = this.getValue("size_column_2");
-      const column3 = this.getValue("size_column_3");
-      const column4 = this.getValue("size_column_4");
-      const column5 = this.getValue("size_column_5");
-      const column6 = this.getValue("size_column_6");
-
+    saveTemplateSizeColumnVuex() {
       let tables = document.getElementsByTagName("table");
+      const _self = this;
       for (let i = 0; i < tables.length; i++) {
         resizableGrid(tables[i]);
       }
       function resizableGrid(table) {
         let row = table.getElementsByTagName("tr")[0],
           cols = row ? row.children : undefined;
+
         for (let i = 0; i < cols.length; i++) {
-          if (column1 && i + 1 === 1) cols[i].style.width = `${column1}`;
-          if (column2 && i + 1 === 2) cols[i].style.width = `${column2}`;
-          if (column3 && i + 1 === 3) cols[i].style.width = `${column3}`;
-          if (column4 && i + 1 === 4) cols[i].style.width = `${column4}`;
-          if (column5 && i + 1 === 5) cols[i].style.width = `${column5}`;
-          if (column6 && i + 1 === 6) cols[i].style.width = `${column6}`;
+          _self.setValue({
+            name: `size_column_${i + 1}`,
+            value: cols[i].style.width,
+          });
+        }
+      }
+    },
+
+    updateSizeColumn() {
+      const column1 = this.getValue("size_column_action");
+      const column2 = this.getValue("size_column_name");
+      const column3 = this.getValue("size_column_price");
+      const column4 = this.getValue("size_column_quantity");
+      const column5 = this.getValue("size_column_product");
+      const column6 = this.getValue("size_column_total");
+
+      let tables = document.getElementsByTagName("table");
+
+      for (let i = 0; i < tables.length; i++) {
+        resizableGrid(tables[i]);
+      }
+
+      function resizableGrid(table) {
+        let row = table.getElementsByTagName("tr")[0],
+          cols = row ? row.children : undefined;
+
+        for (let i = 0; i < cols.length; i++) {
+          const order_name = cols[i].getAttribute("data-order");
+
+          if (column1 && order_name === "action")
+            cols[i].style.width = `${column1}`;
+          if (column2 && order_name === "name")
+            cols[i].style.width = `${column2}`;
+          if (column3 && order_name == "price")
+            cols[i].style.width = `${column3}`;
+          if (column4 && order_name == "quantity")
+            cols[i].style.width = `${column4}`;
+          if (column5 && order_name == "product")
+            cols[i].style.width = `${column5}`;
+          if (column6 && order_name == "total")
+            cols[i].style.width = `${column6}`;
         }
       }
     },
@@ -323,14 +368,14 @@ export default {
 
         [...row.children].forEach((el, i) => {
           el.style.borderRight = "1px solid rgb(0, 0, 0, 0.12)";
+
           el.style.borderLeft = "none";
           if (i === [...row.children].length - 1) {
-            el.style.borderRadius = "0 10px 0 0";
             el.style.borderRight = "none";
             el.style.pointerEvents = "none";
           }
           if (i === 0) {
-            el.style.borderRadius = "10px 0 0 0";
+            // el.style.borderRadius = "10px 0 0 0";
           }
         });
 
@@ -425,6 +470,7 @@ export default {
             _self.headers.splice(newIndex, 0, headerSelected);
             _self.saveChange = "change";
           },
+          ghostClass: "sortable-ghost_header",
         });
       });
     },
@@ -436,15 +482,19 @@ export default {
         onEnd({ newIndex, oldIndex }) {
           const rowSelected = _self.columns.splice(oldIndex, 1)[0];
           _self.columns.splice(newIndex, 0, rowSelected);
+          _self.saveChange = "change";
         },
         ghostClass: "sortable-ghost",
       });
     },
 
     onSave() {
+      // this.saveTemplateSizeColumnVuex();
       this.saveChange = "pending";
       this.$emit("on-save");
       this.setNewOrderHeaders(this.newOrderHeaders);
+      this.setNewOrderLines(this.newOrderLines);
+
       setTimeout(() => {
         this.saveChange = false;
       }, 500);
@@ -452,6 +502,9 @@ export default {
 
     setNewOrderHeaders(newValue) {
       this.setValue({ name: "new_order_headers", value: newValue });
+    },
+    setNewOrderLines(newValue) {
+      this.setValue({ name: "new_order_lines", value: newValue });
     },
   },
 };
@@ -463,6 +516,7 @@ export default {
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.07);
   border-radius: 0 0 10px 10px;
   border: 1px solid rgb(0, 0, 0, 0.12) !important;
+  padding-bottom: 30px;
 }
 
 td {
@@ -473,25 +527,39 @@ td {
 }
 
 .v-data-table ::v-deep {
-  th {
-    font-family: MyriadPro;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: black !important;
-    .headerHandle {
-      // line-height: 46px;
-      cursor: move;
-      height: 80%;
-      cursor: move;
-      display: flex;
-      align-items: center;
+  table {
+    overflow: visible !important;
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      th {
+        font-family: MyriadPro;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: black !important;
+        background: white;
+        .headerHandle {
+          // line-height: 46px;
+          cursor: move;
+          height: 80%;
+          cursor: move;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+    tbody {
+      position: relative;
+      top: 20px;
     }
   }
 }
+
 .v-data-table ::v-deep .v-table__wrapper {
   &::-webkit-scrollbar {
     width: 5px;
@@ -574,9 +642,16 @@ td {
 }
 
 .sortable-ghost {
-  border: 1px dashed red !important;
-  background: red;
-  // display: none;
+}
+
+.v-table--fixed-header
+  > .v-table__wrapper
+  > table
+  > thead
+  > tr
+  > .sortable-ghost_header {
+  border: 2px dashed #a6b7d4 !important;
+  border-bottom: 2px dashed #a6b7d4 !important;
 }
 
 .combined-shape {

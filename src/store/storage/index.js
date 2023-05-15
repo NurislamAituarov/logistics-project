@@ -7,14 +7,15 @@ const getItem = (key) => {
 
 export default {
   state: {
-    size_column_1: getItem(storage.size_column_1),
-    size_column_2: getItem(storage.size_column_2),
-    size_column_3: getItem(storage.size_column_3),
-    size_column_4: getItem(storage.size_column_4),
-    size_column_5: getItem(storage.size_column_5),
-    size_column_6: getItem(storage.size_column_6),
+    size_column_action: getItem(storage.size_column_action),
+    size_column_name: getItem(storage.size_column_name),
+    size_column_price: getItem(storage.size_column_price),
+    size_column_quantity: getItem(storage.size_column_quantity),
+    size_column_product: getItem(storage.size_column_product),
+    size_column_total: getItem(storage.size_column_total),
 
     new_order_headers: getItem(storage.new_order_headers),
+    new_order_lines: getItem(storage.new_order_lines),
   },
   getters: {
     getValue: (state) => (key) => {
