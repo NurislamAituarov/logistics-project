@@ -61,6 +61,13 @@ export default {
       if (this.$route.path === "/load") {
         this.activeMenuItem = "Аналитика";
       }
+
+      if (this.$route.params.key) {
+        this.activeMenuItem = "";
+        this.menuListItems = this.menuListItems.map((list) => {
+          return { ...list, item: [] };
+        });
+      }
     },
   },
 

@@ -80,15 +80,34 @@
           {{ index + 1 }}
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
+
+        <!-- <td v-for="header in headers" :key="header.key">
+          <div
+            class="wrapper__column"
+            :class="{ tbody__column: header.key === 'name' }"
+          >
+            {{ item.columns[header.key] }}
+            <div
+              v-if="header.key === 'name'"
+              class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
+            >
+              <p class="right-arrow_2"></p>
+            </div>
+          </div>
+        </td> -->
+
         <td>
           <div
             class="wrapper__column"
             :class="{ tbody__column: headers[1].key === 'name' }"
           >
             {{ item.columns[headers[1]["key"]] }}
+
             <div
               v-if="headers[1].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -96,7 +115,6 @@
         </td>
         <td>
           <div class="wrapper__column">
-            <!-- {{ item.columns.price }} -->
             {{ item.columns[headers[2]["key"]] }}
             <div
               v-if="headers[2].key === 'name'"
@@ -119,7 +137,6 @@
         </td>
         <td>
           <div class="wrapper__column">
-            <!-- {{ item.columns.product }} -->
             {{ item.columns[headers[4]["key"]] }}
             <div
               v-if="headers[4].key === 'name'"
@@ -131,7 +148,6 @@
         </td>
         <td>
           <div class="wrapper__column">
-            <!-- {{ item.columns.total }}  -->
             {{ item.columns[headers[5]["key"]] }}
             <div
               v-if="headers[5].key === 'name'"
@@ -204,7 +220,6 @@ export default {
       newOrderLines: [],
 
       columnsKey: 0,
-      headersKey: 0,
     };
   },
   computed: {
@@ -237,7 +252,6 @@ export default {
 
     headers: {
       handler(newValue) {
-        // this.headersKey += 1;
         this.newOrderHeaders = newValue;
       },
       deep: true,
@@ -295,24 +309,6 @@ export default {
             `size_column_${order_name}`,
             JSON.stringify(cols[i].style.width)
           );
-        }
-      }
-    },
-    saveTemplateSizeColumnVuex() {
-      let tables = document.getElementsByTagName("table");
-      const _self = this;
-      for (let i = 0; i < tables.length; i++) {
-        resizableGrid(tables[i]);
-      }
-      function resizableGrid(table) {
-        let row = table.getElementsByTagName("tr")[0],
-          cols = row ? row.children : undefined;
-
-        for (let i = 0; i < cols.length; i++) {
-          _self.setValue({
-            name: `size_column_${i + 1}`,
-            value: cols[i].style.width,
-          });
         }
       }
     },
@@ -489,7 +485,6 @@ export default {
     },
 
     onSave() {
-      // this.saveTemplateSizeColumnVuex();
       this.saveChange = "pending";
       this.$emit("on-save");
       this.setNewOrderHeaders(this.newOrderHeaders);
@@ -505,6 +500,10 @@ export default {
     },
     setNewOrderLines(newValue) {
       this.setValue({ name: "new_order_lines", value: newValue });
+    },
+
+    openMyLoadPage(name) {
+      this.$router.push(`/my-load/:${name}`);
     },
   },
 };

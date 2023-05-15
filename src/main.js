@@ -6,6 +6,7 @@ import { loadFonts } from './plugins/webfontloader';
 import store from './store';
 import TheLoad from '@/pages/loadboard/TheLoad.vue';
 import TheBid from '@/pages/bid/About.vue';
+import MyLoad from '@/pages/my-load/my-load.vue';
 
 const router = createRouter({
   // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
@@ -13,6 +14,7 @@ const router = createRouter({
   routes: [
     { path: '/', component: TheBid },
     { path: '/load', component: TheLoad },
+    { path: '/my-load/:key', component: MyLoad },
   ], // short for `routes: routes`
 });
 
