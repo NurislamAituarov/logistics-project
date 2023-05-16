@@ -46,22 +46,6 @@
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
 
-        <!-- <td v-for="header in headers" :key="header.key">
-          <div
-            class="wrapper__column"
-            :class="{ tbody__column: header.key === 'name' }"
-          >
-            {{ item.columns[header.key] }}
-            <div
-              v-if="header.key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td> -->
-
         <td>
           <div
             class="wrapper__column"
@@ -84,6 +68,7 @@
             <div
               v-if="headers[2].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -95,6 +80,7 @@
             <div
               v-if="headers[3].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -106,6 +92,7 @@
             <div
               v-if="headers[4].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -117,6 +104,7 @@
             <div
               v-if="headers[5].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -248,7 +236,7 @@ export default {
   },
 
   updated() {
-    console.log("update");
+    // console.log("update");
   },
 
   methods: {
@@ -268,11 +256,17 @@ export default {
 
         for (let i = 0; i < cols.length; i++) {
           const order_name = cols[i].getAttribute("data-order");
-
-          localStorage.setItem(
-            `size_column_${order_name}`,
-            JSON.stringify(cols[i].style.width)
-          );
+          if (i === 0 || i === cols.length - 1) {
+            localStorage.setItem(
+              `size_column_${order_name}`,
+              JSON.stringify(`100px`)
+            );
+          } else {
+            localStorage.setItem(
+              `size_column_${order_name}`,
+              JSON.stringify(cols[i].style.width)
+            );
+          }
         }
       }
     },

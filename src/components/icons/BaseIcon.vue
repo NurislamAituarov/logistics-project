@@ -29,10 +29,20 @@ export default {
 
   watch: {
     activator(value) {
-      if (value["aria-expanded"] === "true") {
-        this.classSetting = "setting_active";
-      } else {
-        this.classSetting = "";
+      switch (value["aria-expanded"]) {
+        case "true":
+          this.classSetting = "setting_active";
+          break;
+        case "false":
+          if (this.name === "setting" || this.name === "dragV2") {
+            this.classSetting = "icon_hover";
+          } else {
+            this.classSetting = "";
+          }
+          break;
+        default:
+          this.classSetting = "";
+          break;
       }
     },
   },

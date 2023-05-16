@@ -14,7 +14,11 @@
       >
         Сохранено
       </p>
-      <v-menu :location="location">
+      <v-menu
+        :location="bottom"
+        :close-on-content-click="false"
+        v-model="menuOpen"
+      >
         <template v-slot:activator="{ props }">
           <BaseIcon
             class="btn_setting"
@@ -27,9 +31,19 @@
           />
         </template>
 
-        <v-list class="setting_list">
+        <v-list v-if="!activeItem" class="setting_list">
           <v-list-item v-for="(item, index) in items" :key="index">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title
+              @click="onSelectedSetting(item.title)"
+              class="list__item-title"
+              >{{ item.title }}</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+
+        <v-list v-else class="setting_list-headers">
+          <v-list-item v-for="(item, index) in headers" :key="index">
+            <BaseCheckbox :label="item.key" />
           </v-list-item>
         </v-list>
       </v-menu>
@@ -39,20 +53,66 @@
 
 
 <script>
+import { mapGetters } from "vuex";
 import BaseIcon from "./icons/BaseIcon.vue";
+import BaseCheckbox from "./BaseChekbox.vue";
 
 export default {
   name: "TheExtraLine",
+  components: {
+    BaseCheckbox,
+    BaseIcon,
+  },
   props: {
     saveChange: { type: Boolean || String, default: false },
   },
   data() {
     return {
+      headers: [],
       items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
-      location: "bottom",
+      itemColumns: [
+        {
+          name: "Item #1",
+          id: 1,
+        },
+        {
+          name: "Item #2",
+          id: 2,
+        },
+        {
+          name: "Item #3",
+          id: 3,
+        },
+      ],
+      activeItem: "",
+      menuOpen: false,
     };
   },
-  components: { BaseIcon },
+
+  watch: {
+    activeItem() {
+      console.log(this.$refs.refCheckbox);
+    },
+    menuOpen(value) {
+      if (value) this.activeItem = "";
+    },
+  },
+
+  computed: {
+    ...mapGetters(["getHeaders"]),
+  },
+
+  mounted() {
+    this.headers = this.getHeaders;
+  },
+
+  updated() {},
+
+  methods: {
+    onSelectedSetting(value) {
+      this.activeItem = value;
+    },
+  },
 };
 </script>
 
@@ -80,5 +140,16 @@ export default {
 .btn_setting {
   cursor: pointer;
   width: fit-content;
+}
+
+.list__item-title {
+  cursor: pointer;
+  &:hover {
+    color: #1253a2;
+  }
+}
+
+.setting_list-headers {
+  width: 210px;
 }
 </style>
