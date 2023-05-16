@@ -1,40 +1,5 @@
 <template>
-  <div class="extra_line">
-    <div class="d-flex align-center">
-      <p
-        v-if="saveChange && saveChange === 'change'"
-        @click="onSave"
-        class="btn-save_template mr-5"
-      >
-        Сохранить изменение
-      </p>
-      <p
-        v-if="saveChange && saveChange === 'pending'"
-        class="btn-save_template mr-5"
-      >
-        Сохранено
-      </p>
-      <v-menu :location="location">
-        <template v-slot:activator="{ props }">
-          <BaseIcon
-            class="btn_setting"
-            name="setting"
-            width="16"
-            height="16"
-            color="#a6b7d4"
-            :activator="props"
-            v-bind="props"
-          />
-        </template>
-
-        <v-list class="setting_list">
-          <v-list-item v-for="(item, index) in items" :key="index">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-  </div>
+  <TheExtraLine :save-change="saveChange" @on-save="onSave" />
 
   <v-data-table
     ref="table"
@@ -81,22 +46,6 @@
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
 
-        <!-- <td v-for="header in headers" :key="header.key">
-          <div
-            class="wrapper__column"
-            :class="{ tbody__column: header.key === 'name' }"
-          >
-            {{ item.columns[header.key] }}
-            <div
-              v-if="header.key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td> -->
-
         <td>
           <div
             class="wrapper__column"
@@ -119,6 +68,7 @@
             <div
               v-if="headers[2].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -130,6 +80,7 @@
             <div
               v-if="headers[3].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -141,6 +92,7 @@
             <div
               v-if="headers[4].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -152,6 +104,7 @@
             <div
               v-if="headers[5].key === 'name'"
               class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
             >
               <p class="right-arrow_2"></p>
             </div>
@@ -167,12 +120,14 @@ import { mapGetters, mapActions } from "vuex";
 import Sortable from "sortablejs";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
+import TheExtraLine from "./TheExtraLine.vue";
 
 export default {
   name: "TheTable",
   components: {
     VDataTable,
     BaseIcon,
+    TheExtraLine,
   },
 
   props: {
@@ -207,9 +162,6 @@ export default {
       ],
       columns: [],
       saveChange: false,
-
-      items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
-      location: "bottom",
 
       pagination: {
         sortBy: "name",
@@ -284,7 +236,7 @@ export default {
   },
 
   updated() {
-    console.log("update");
+    // console.log("update");
   },
 
   methods: {
@@ -304,11 +256,17 @@ export default {
 
         for (let i = 0; i < cols.length; i++) {
           const order_name = cols[i].getAttribute("data-order");
-
-          localStorage.setItem(
-            `size_column_${order_name}`,
-            JSON.stringify(cols[i].style.width)
-          );
+          if (i === 0 || i === cols.length - 1) {
+            localStorage.setItem(
+              `size_column_${order_name}`,
+              JSON.stringify(`100px`)
+            );
+          } else {
+            localStorage.setItem(
+              `size_column_${order_name}`,
+              JSON.stringify(cols[i].style.width)
+            );
+          }
         }
       }
     },
@@ -611,33 +569,8 @@ td {
   cursor: pointer;
 }
 
-.btn_setting {
-  cursor: pointer;
-  width: fit-content;
-}
-
 .setting_list {
   width: max-content !important;
-}
-
-.extra_line {
-  width: 100%;
-  height: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 10px 10px 0 0;
-  border-bottom: none;
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  padding-right: 15px;
-}
-
-.btn-save_template {
-  cursor: pointer;
-  &:hover {
-    color: #1253a2;
-    transition: 0.3s;
-  }
 }
 
 .sortable-ghost {
