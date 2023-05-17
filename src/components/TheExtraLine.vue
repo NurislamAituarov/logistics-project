@@ -3,7 +3,7 @@
     <div class="d-flex align-center">
       <p
         v-if="saveChange && saveChange === 'change'"
-        @click="$emit('on-save')"
+        @click="$emit('on-save-change')"
         class="btn-save_template mr-5"
       >
         Сохранить изменение
@@ -15,7 +15,7 @@
         Сохранено
       </p>
       <v-menu
-        :location="bottom"
+        location="bottom"
         :close-on-content-click="false"
         v-model="menuOpen"
       >
@@ -43,7 +43,12 @@
 
         <v-list v-else class="setting_list-headers">
           <v-list-item v-for="(item, index) in headers" :key="index">
-            <BaseCheckbox :label="item.key" />
+            <BaseCheckbox
+              :label="item.key"
+              :value="item.show"
+              :disabled="item.key === 'action' || item.key === 'total'"
+              @input="onChange($event, item.key)"
+            />
           </v-list-item>
         </v-list>
       </v-menu>
@@ -53,7 +58,7 @@
 
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import BaseIcon from "./icons/BaseIcon.vue";
 import BaseCheckbox from "./BaseChekbox.vue";
 
@@ -96,6 +101,13 @@ export default {
     menuOpen(value) {
       if (value) this.activeItem = "";
     },
+
+    getHeaders: {
+      handler(items) {
+        this.headers = items;
+      },
+      deep: true,
+    },
   },
 
   computed: {
@@ -109,8 +121,14 @@ export default {
   updated() {},
 
   methods: {
+    ...mapActions(["setChangeDisabled"]),
+
     onSelectedSetting(value) {
       this.activeItem = value;
+    },
+
+    onChange(e, key) {
+      this.setChangeDisabled({ show: e.target.checked, key });
     },
   },
 };

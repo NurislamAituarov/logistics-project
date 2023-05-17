@@ -1,10 +1,10 @@
 import { createStore } from 'vuex';
-import products from './modules';
+import module from './modules';
 import columnSize from './storage';
 
 const store = createStore({
   modules: {
-    products,
+    module,
     columnSize,
   },
 });
