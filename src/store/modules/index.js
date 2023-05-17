@@ -7,6 +7,10 @@ export default {
     setChangeColumns({ commit }, active) {
       commit('setChangeColumns', active);
     },
+
+    setChangeDisabled({ commit }, { show, key }) {
+      commit('setChangeDisabled', { show, key });
+    },
   },
   mutations: {
     createColumn(state, productItem) {
@@ -14,6 +18,13 @@ export default {
     },
     setChangeColumns(state, active) {
       state.changeColumns = active;
+    },
+
+    setChangeDisabled(state, { show, key }) {
+      state.headers = state.headers.map((header) => {
+        if (key !== header.key) return header;
+        return { ...header, show };
+      });
     },
   },
   state: {
@@ -23,22 +34,25 @@ export default {
         align: 'start',
         sortable: false,
         key: 'action',
+        show: true,
       },
       {
         title: 'Наименование еденицы',
         align: 'start',
         sortable: false,
         key: 'name',
+        show: true,
       },
-      { title: 'Цена', align: 'start', sortable: false, key: 'price' },
-      { title: 'Кол-во', align: 'start', sortable: false, key: 'quantity' },
+      { title: 'Цена', align: 'start', sortable: false, key: 'price', show: true },
+      { title: 'Кол-во', align: 'start', sortable: false, key: 'quantity', show: true },
       {
         title: 'Название товара',
         align: 'start',
         sortable: false,
         key: 'product',
+        show: true,
       },
-      { title: 'Итого', align: 'start', sortable: false, key: 'total' },
+      { title: 'Итого', align: 'start', sortable: false, key: 'total', show: true },
     ],
     products: [
       {

@@ -1,9 +1,9 @@
 <template>
-  <TheExtraLine :save-change="saveChange" @on-save="onSave" />
+  <TheExtraLine :save-change="saveChange" @on-save-change="onSaveChange" />
 
   <v-data-table
     ref="table"
-    :headers="headers"
+    :headers="showUpdateHeaders"
     :items="columns"
     :items-per-page="itemsPerPage"
     :pagination="pagination"
@@ -46,7 +46,7 @@
           <BaseIcon name="options" color="#a6b7d4" shadow="true" />
         </td>
 
-        <td>
+        <td v-if="!hideColumns.includes(headers[1].key)">
           <div
             class="wrapper__column"
             :class="{ tbody__column: headers[1].key === 'name' }"
@@ -62,7 +62,7 @@
             </div>
           </div>
         </td>
-        <td>
+        <td v-if="!hideColumns.includes(headers[2].key)">
           <div class="wrapper__column">
             {{ item.columns[headers[2]["key"]] }}
             <div
@@ -74,7 +74,7 @@
             </div>
           </div>
         </td>
-        <td>
+        <td v-if="!hideColumns.includes(headers[3].key)">
           <div class="wrapper__column">
             {{ item.columns[headers[3]["key"]] }}
             <div
@@ -86,7 +86,7 @@
             </div>
           </div>
         </td>
-        <td>
+        <td v-if="!hideColumns.includes(headers[4].key)">
           <div class="wrapper__column">
             {{ item.columns[headers[4]["key"]] }}
             <div
@@ -98,6 +98,7 @@
             </div>
           </div>
         </td>
+
         <td>
           <div class="wrapper__column">
             {{ item.columns[headers[5]["key"]] }}
@@ -143,22 +144,43 @@ export default {
           align: "start",
           sortable: false,
           key: "action",
+          show: true,
         },
         {
           title: "Наименование еденицы",
           align: "start",
           sortable: false,
           key: "name",
+          show: true,
         },
-        { title: "Цена", align: "start", sortable: false, key: "price" },
-        { title: "Кол-во", align: "start", sortable: false, key: "quantity" },
+        {
+          title: "Цена",
+          align: "start",
+          sortable: false,
+          key: "price",
+          show: true,
+        },
+        {
+          title: "Кол-во",
+          align: "start",
+          sortable: false,
+          key: "quantity",
+          show: true,
+        },
         {
           title: "Название товара",
           align: "start",
           sortable: false,
           key: "product",
+          show: true,
         },
-        { title: "Итого", align: "start", sortable: false, key: "total" },
+        {
+          title: "Итого",
+          align: "start",
+          sortable: false,
+          key: "total",
+          show: true,
+        },
       ],
       columns: [],
       saveChange: false,
@@ -172,8 +194,13 @@ export default {
       newOrderLines: [],
 
       columnsKey: 0,
+
+      hideColumns: [],
     };
   },
+
+  emits: ["onSave"],
+
   computed: {
     ...mapGetters([
       "getHeaders",
@@ -181,6 +208,12 @@ export default {
       "getValue",
       "getChangeColumns",
     ]),
+
+    showUpdateHeaders() {
+      return this.headers.filter((item) => {
+        return item.show;
+      });
+    },
   },
 
   watch: {
@@ -205,6 +238,18 @@ export default {
     headers: {
       handler(newValue) {
         this.newOrderHeaders = newValue;
+
+        newValue.forEach((el) => {
+          if (!el.show) {
+            this.hideColumns = [];
+            this.hideColumns.push(el.key);
+          }
+
+          if (el.show && this.hideColumns.includes(el.key)) {
+            this.hideColumns = [];
+          }
+        });
+        this.getDataTableHTML();
       },
       deep: true,
     },
@@ -218,6 +263,13 @@ export default {
       },
       deep: true,
     },
+
+    // hideColumns: {
+    //   handler(value) {
+    //     if (value) this.getDataTableHTML();
+    //   },
+    //   deep: true,
+    // },
   },
 
   mounted() {
@@ -236,7 +288,7 @@ export default {
   },
 
   updated() {
-    // console.log("update");
+    console.log("update");
   },
 
   methods: {
@@ -442,7 +494,7 @@ export default {
       });
     },
 
-    onSave() {
+    onSaveChange() {
       this.saveChange = "pending";
       this.$emit("on-save");
       this.setNewOrderHeaders(this.newOrderHeaders);
