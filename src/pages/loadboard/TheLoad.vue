@@ -45,6 +45,7 @@ export default {
         one: "",
         action: "",
         name: "Мраморный",
+        newCol: "New str",
         price: 0,
         quantity: 0,
         product: "fffffff",

@@ -98,12 +98,24 @@
             </div>
           </div>
         </td>
-
-        <td>
+        <td v-if="!hideColumns.includes(headers[5].key)">
           <div class="wrapper__column">
             {{ item.columns[headers[5]["key"]] }}
             <div
               v-if="headers[5].key === 'name'"
+              class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
+            >
+              <p class="right-arrow_2"></p>
+            </div>
+          </div>
+        </td>
+
+        <td>
+          <div class="wrapper__column">
+            {{ item.columns[headers[6]["key"]] }}
+            <div
+              v-if="headers[6].key === 'name'"
               class="tbody__column-redirect"
               @click="openMyLoadPage(item.columns.name)"
             >
@@ -138,50 +150,7 @@ export default {
   data() {
     return {
       itemsPerPage: 25,
-      headers: [
-        {
-          title: "Действие",
-          align: "start",
-          sortable: false,
-          key: "action",
-          show: true,
-        },
-        {
-          title: "Наименование еденицы",
-          align: "start",
-          sortable: false,
-          key: "name",
-          show: true,
-        },
-        {
-          title: "Цена",
-          align: "start",
-          sortable: false,
-          key: "price",
-          show: true,
-        },
-        {
-          title: "Кол-во",
-          align: "start",
-          sortable: false,
-          key: "quantity",
-          show: true,
-        },
-        {
-          title: "Название товара",
-          align: "start",
-          sortable: false,
-          key: "product",
-          show: true,
-        },
-        {
-          title: "Итого",
-          align: "start",
-          sortable: false,
-          key: "total",
-          show: true,
-        },
-      ],
+      headers: [],
       columns: [],
       saveChange: false,
 
@@ -240,8 +209,7 @@ export default {
         this.newOrderHeaders = newValue;
 
         newValue.forEach((el) => {
-          if (!el.show) {
-            this.hideColumns = [];
+          if (!el.show && !this.hideColumns.includes(el.key)) {
             this.hideColumns.push(el.key);
           }
 
@@ -263,21 +231,14 @@ export default {
       },
       deep: true,
     },
-
-    // hideColumns: {
-    //   handler(value) {
-    //     if (value) this.getDataTableHTML();
-    //   },
-    //   deep: true,
-    // },
   },
 
   mounted() {
     this.columns = this.getValue("new_order_lines") || this.getProducts;
     this.headers = this.getValue("new_order_headers") || this.getHeaders;
 
-    this.updateSizeColumn();
     setTimeout(() => {
+      this.updateSizeColumn();
       this.getDataTableHTML();
     });
 
@@ -330,6 +291,7 @@ export default {
       const column4 = this.getValue("size_column_quantity");
       const column5 = this.getValue("size_column_product");
       const column6 = this.getValue("size_column_total");
+      const column7 = this.getValue("size_column_newCol");
 
       let tables = document.getElementsByTagName("table");
 
@@ -356,6 +318,8 @@ export default {
             cols[i].style.width = `${column5}`;
           if (column6 && order_name == "total")
             cols[i].style.width = `${column6}`;
+          if (column7 && order_name == "newCol")
+            cols[i].style.width = `${column7}`;
         }
       }
     },

@@ -69,7 +69,7 @@ export default {
     BaseIcon,
   },
   props: {
-    saveChange: { type: Boolean || String, default: false },
+    saveChange: { type: [Boolean, String], default: false },
   },
   data() {
     return {
