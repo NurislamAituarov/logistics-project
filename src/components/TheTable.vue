@@ -11,9 +11,9 @@
     :items="columns"
     :items-per-page="itemsPerPage"
     :pagination="pagination"
+    :height="tableHeight"
     select-all
     hide-default-footer
-    height="420"
     fixed-header
     item-value="name"
     class="elevation-1 data__table"
@@ -47,7 +47,7 @@
             color="#A6B7D4"
           />
           {{ index + 1 }}
-          <BaseIcon name="options" color="#a6b7d4" shadow="true" />
+          <TheOptions />
         </td>
 
         <td v-if="!hideColumns.includes(headers[1].key)">
@@ -138,6 +138,7 @@ import Sortable from "sortablejs";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import TheExtraLine from "./TheExtraLine.vue";
+import TheOptions from "./TheOptions.vue";
 
 export default {
   name: "TheTable",
@@ -145,6 +146,7 @@ export default {
     VDataTable,
     BaseIcon,
     TheExtraLine,
+    TheOptions,
   },
 
   props: {
@@ -169,6 +171,8 @@ export default {
       columnsKey: 0,
 
       hideColumns: [],
+
+      handleMouse: null,
     };
   },
 
@@ -186,6 +190,11 @@ export default {
       return this.headers.filter((item) => {
         return item.show;
       });
+    },
+
+    tableHeight() {
+      const screenHeight = window.innerHeight;
+      return `${screenHeight - 300}px`; // Set the table height to 60% of the screen height
     },
   },
 
@@ -250,6 +259,11 @@ export default {
     this.changeSortHeaders();
   },
 
+  unmounted() {
+    console.log("unmount", this.handleMouse);
+    document.removeEventListener("mousemove", this.handleMouse);
+  },
+
   updated() {
     console.log("update");
   },
@@ -261,68 +275,63 @@ export default {
     },
 
     saveTemplateSizeColumn() {
-      let tables = document.getElementsByTagName("table");
-      for (let i = 0; i < tables.length; i++) {
-        resizableGrid(tables[i]);
-      }
-      function resizableGrid(table) {
-        let row = table.getElementsByTagName("tr")[0],
-          cols = row ? row.children : undefined;
+      const tables = document.getElementsByTagName("table");
 
-        for (let i = 0; i < cols.length; i++) {
-          const order_name = cols[i].getAttribute("data-order");
+      Array.from(tables).forEach((table) => {
+        resizableGrid(table);
+      });
+
+      function resizableGrid(table) {
+        const row = table.querySelector("tr");
+        const cols = row ? Array.from(row.children) : [];
+
+        cols.forEach((col, i) => {
+          const orderName = col.getAttribute("data-order");
+          let columnValue;
+
           if (i === 0 || i === cols.length - 1) {
-            localStorage.setItem(
-              `size_column_${order_name}`,
-              JSON.stringify(`100px`)
-            );
+            columnValue = "100px";
           } else {
-            localStorage.setItem(
-              `size_column_${order_name}`,
-              JSON.stringify(cols[i].style.width)
-            );
+            columnValue = col.style.width;
           }
-        }
+
+          localStorage.setItem(
+            `size_column_${orderName}`,
+            JSON.stringify(columnValue)
+          );
+        });
       }
     },
 
     updateSizeColumn() {
-      const column1 = this.getValue("size_column_action");
-      const column2 = this.getValue("size_column_name");
-      const column3 = this.getValue("size_column_price");
-      const column4 = this.getValue("size_column_quantity");
-      const column5 = this.getValue("size_column_product");
-      const column6 = this.getValue("size_column_total");
-      const column7 = this.getValue("size_column_newCol");
+      const columnValues = {
+        action: this.getValue("size_column_action"),
+        name: this.getValue("size_column_name"),
+        price: this.getValue("size_column_price"),
+        quantity: this.getValue("size_column_quantity"),
+        product: this.getValue("size_column_product"),
+        total: this.getValue("size_column_total"),
+        newCol: this.getValue("size_column_newCol"),
+      };
 
-      let tables = document.getElementsByTagName("table");
+      const tables = document.getElementsByTagName("table");
 
-      for (let i = 0; i < tables.length; i++) {
-        resizableGrid(tables[i]);
-      }
+      Array.from(tables).forEach((table) => {
+        resizableGrid(table);
+      });
 
       function resizableGrid(table) {
-        let row = table.getElementsByTagName("tr")[0],
-          cols = row ? row.children : undefined;
+        const row = table.querySelector("tr");
+        const cols = row ? Array.from(row.children) : [];
 
-        for (let i = 0; i < cols.length; i++) {
-          const order_name = cols[i].getAttribute("data-order");
+        cols.forEach((col) => {
+          const orderName = col.getAttribute("data-order");
+          const columnValue = columnValues[orderName];
 
-          if (column1 && order_name === "action")
-            cols[i].style.width = `${column1}`;
-          if (column2 && order_name === "name")
-            cols[i].style.width = `${column2}`;
-          if (column3 && order_name == "price")
-            cols[i].style.width = `${column3}`;
-          if (column4 && order_name == "quantity")
-            cols[i].style.width = `${column4}`;
-          if (column5 && order_name == "product")
-            cols[i].style.width = `${column5}`;
-          if (column6 && order_name == "total")
-            cols[i].style.width = `${column6}`;
-          if (column7 && order_name == "newCol")
-            cols[i].style.width = `${column7}`;
-        }
+          if (columnValue) {
+            col.style.width = `${columnValue}`;
+          }
+        });
       }
     },
 
@@ -365,6 +374,18 @@ export default {
         function setListeners(div) {
           let pageX, curCol, nxtCol, curColWidth, nxtColWidth;
 
+          const handleMouseMove = function (e) {
+            console.log("move");
+            if (curCol) {
+              thisCopy.saveChange = "change";
+              let diffX = e.pageX - pageX;
+              if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
+              curCol.style.width = curColWidth + diffX + "px";
+            }
+          };
+
+          thisCopy.handleMouse = handleMouseMove;
+
           div.addEventListener("mousedown", function (e) {
             curCol = e.target.parentElement;
             nxtCol = curCol.nextElementSibling;
@@ -384,14 +405,7 @@ export default {
             e.target.style.borderRight = "";
           });
 
-          document.addEventListener("mousemove", function (e) {
-            if (curCol) {
-              thisCopy.saveChange = "change";
-              let diffX = e.pageX - pageX;
-              if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
-              curCol.style.width = curColWidth + diffX + "px";
-            }
-          });
+          document.addEventListener("mousemove", thisCopy.handleMouse);
 
           document.addEventListener("mouseup", function () {
             curCol = undefined;
@@ -488,6 +502,7 @@ export default {
 
 <style scoped lang="scss">
 .data__table {
+  // height: 420px;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.07);
   border-radius: 0 0 10px 10px;
   border: 1px solid rgb(0, 0, 0, 0.12) !important;

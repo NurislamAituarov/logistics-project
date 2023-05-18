@@ -45,10 +45,10 @@ export default {
         one: "",
         action: "",
         name: "Мраморный",
-        newCol: "New str",
+        newCol: "Тестовое поле ",
         price: 0,
         quantity: 0,
-        product: "fffffff",
+        product: "Тестовое название",
         total: "0000",
       });
     },
