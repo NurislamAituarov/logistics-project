@@ -11,6 +11,13 @@ export default {
     setChangeDisabled({ commit }, { show, key }) {
       commit('setChangeDisabled', { show, key });
     },
+
+    setStorageHeaders({ commit }, headers) {
+      commit('setStorageHeaders', headers);
+    },
+    setStorageColumns({ commit }, columns) {
+      commit('setStorageColumns', columns);
+    },
   },
   mutations: {
     createColumn(state, productItem) {
@@ -19,12 +26,19 @@ export default {
     setChangeColumns(state, active) {
       state.changeColumns = active;
     },
-
     setChangeDisabled(state, { show, key }) {
       state.headers = state.headers.map((header) => {
         if (key !== header.key) return header;
         return { ...header, show };
       });
+    },
+
+    setStorageHeaders(state, headers) {
+      state.headers = headers;
+    },
+
+    setStorageColumns(state, columns) {
+      state.products = columns;
     },
   },
   state: {

@@ -95,15 +95,13 @@ export default {
   },
 
   watch: {
-    activeItem() {
-      console.log(this.$refs.refCheckbox);
-    },
     menuOpen(value) {
       if (value) this.activeItem = "";
     },
 
     getHeaders: {
       handler(items) {
+        this.$emit("save-change-active");
         this.headers = items;
       },
       deep: true,
