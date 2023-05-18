@@ -43,6 +43,9 @@ export default {
         key: 'name',
         show: true,
       },
+
+      { title: 'Новая колонка', align: 'start', sortable: false, key: 'newCol', show: true },
+
       { title: 'Цена', align: 'start', sortable: false, key: 'price', show: true },
       { title: 'Кол-во', align: 'start', sortable: false, key: 'quantity', show: true },
       {
@@ -59,6 +62,7 @@ export default {
         one: '',
         action: 'действие',
         name: 'Серебренный щебень фр. 2-5 мм, 25кг',
+        newCol: 'Новая колонка',
         price: 1203,
         quantity: 10,
         product: 'Мраморный щебе',
@@ -67,6 +71,7 @@ export default {
       {
         action: 'действие',
         name: 'Золотой щебень фр. 2-5 мм, 25кг',
+        newCol: 'Новая колонка',
         price: 1203,
         quantity: 20,
         product: 'Мраморный щебе',
@@ -75,6 +80,7 @@ export default {
       {
         action: 'действие',
         name: 'Мраморный щебень фр. 2-5 мм, 25кг',
+        newCol: 'Новая колонка',
         price: 1203,
         quantity: 30,
         product: 'Мраморный щебе',
@@ -83,6 +89,7 @@ export default {
       {
         action: 'действие',
         name: 'Мраморный щебень фр. 2-5 мм, 25кг',
+        newCol: 'Новая колонка',
         price: 1203,
         quantity: 40,
         product: 'Мраморный щебе',
