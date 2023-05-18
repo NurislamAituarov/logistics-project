@@ -1,5 +1,9 @@
 <template>
-  <TheExtraLine :save-change="saveChange" @on-save-change="onSaveChange" />
+  <TheExtraLine
+    :save-change="saveChange"
+    @on-save-change="onSaveChange"
+    @save-change-active="saveChange = 'change'"
+  />
 
   <v-data-table
     ref="table"
@@ -234,17 +238,15 @@ export default {
   },
 
   mounted() {
-    this.columns = this.getValue("new_order_lines") || this.getProducts;
-    this.headers = this.getValue("new_order_headers") || this.getHeaders;
+    this.columns = this.getProducts;
+    this.headers = this.getHeaders;
 
     setTimeout(() => {
       this.updateSizeColumn();
       this.getDataTableHTML();
     });
 
-    // Sort Columns
     this.changeSortColumns();
-    // Sort Headers
     this.changeSortHeaders();
   },
 

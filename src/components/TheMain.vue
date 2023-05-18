@@ -7,11 +7,32 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import TheLeftColumn from "./TheLeftColumn.vue";
 
 export default {
   components: {
     TheLeftColumn,
+  },
+
+  computed: {
+    ...mapGetters(["getValue"]),
+  },
+
+  mounted() {
+    this.getValueStorage();
+  },
+
+  methods: {
+    ...mapActions(["setStorageHeaders", "setStorageColumns"]),
+
+    getValueStorage() {
+      this.getValue("new_order_headers") &&
+        this.setStorageHeaders(this.getValue("new_order_headers"));
+
+      this.getValue("new_order_lines") &&
+        this.setStorageColumns(this.getValue("new_order_lines"));
+    },
   },
 };
 </script>
