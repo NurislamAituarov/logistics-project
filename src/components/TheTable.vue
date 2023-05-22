@@ -172,8 +172,6 @@ export default {
       columnsKey: 0,
 
       hideColumns: [],
-
-      handleMouse: null,
     };
   },
 
@@ -261,8 +259,7 @@ export default {
   },
 
   unmounted() {
-    console.log("unmount", this.handleMouse);
-    document.removeEventListener("mousemove", this.handleMouse);
+    console.log("unmount");
   },
 
   updated() {
@@ -375,18 +372,6 @@ export default {
         function setListeners(div) {
           let pageX, curCol, nxtCol, curColWidth, nxtColWidth;
 
-          const handleMouseMove = function (e) {
-            console.log("move");
-            if (curCol) {
-              thisCopy.saveChange = "change";
-              let diffX = e.pageX - pageX;
-              if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
-              curCol.style.width = curColWidth + diffX + "px";
-            }
-          };
-
-          thisCopy.handleMouse = handleMouseMove;
-
           div.addEventListener("mousedown", function (e) {
             curCol = e.target.parentElement;
             nxtCol = curCol.nextElementSibling;
@@ -406,7 +391,15 @@ export default {
             e.target.style.borderRight = "";
           });
 
-          document.addEventListener("mousemove", thisCopy.handleMouse);
+          row.addEventListener("mousemove", function (e) {
+            console.log("move");
+            if (curCol) {
+              thisCopy.saveChange = "change";
+              let diffX = e.pageX - pageX;
+              if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
+              curCol.style.width = curColWidth + diffX + "px";
+            }
+          });
 
           document.addEventListener("mouseup", function () {
             curCol = undefined;
