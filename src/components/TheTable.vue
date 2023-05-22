@@ -47,7 +47,8 @@
             color="#A6B7D4"
           />
           {{ index + 1 }}
-          <TheOptions />
+
+          <TheOptions :idLine="columns[index].id" @delete-line="deleteLine" />
         </td>
 
         <td v-if="!hideColumns.includes(headers[1].key)">
@@ -269,7 +270,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setValue", "setChangeColumns"]),
+    ...mapActions(["setValue", "setChangeColumns", "deletedLine"]),
     onDragEnd(event) {
       this.headers = event.list;
     },
@@ -495,6 +496,12 @@ export default {
     openMyLoadPage(name) {
       this.$router.push(`/my-load/:${name}`);
     },
+
+    async deleteLine(id) {
+      await this.deletedLine(id);
+      this.setNewOrderHeaders(this.newOrderHeaders);
+      this.setNewOrderLines(this.newOrderLines);
+    },
   },
 };
 </script>
@@ -502,7 +509,6 @@ export default {
 
 <style scoped lang="scss">
 .data__table {
-  // height: 420px;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.07);
   border-radius: 0 0 10px 10px;
   border: 1px solid rgb(0, 0, 0, 0.12) !important;
