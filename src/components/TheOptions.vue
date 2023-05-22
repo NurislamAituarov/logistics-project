@@ -16,9 +16,11 @@
       </template>
       <v-list>
         <v-list-item v-for="(item, index) in items" :key="index">
-          <v-list-item-title class="list__item-title">{{
-            item.title
-          }}</v-list-item-title>
+          <v-list-item-title
+            @click="item.title === 'Удалить' && deleteLine(idLine)"
+            class="list__item-title"
+            >{{ item.title }}</v-list-item-title
+          >
         </v-list-item>
       </v-list>
     </v-menu>
@@ -31,13 +33,26 @@ import BaseIcon from "./icons/BaseIcon.vue";
 
 export default {
   name: "TheOptions",
+
+  components: { BaseIcon },
+
+  props: {
+    idLine: { type: String, default: "" },
+  },
+
   data: () => ({
     items: [{ title: "Удалить" }, { title: "Изменить" }],
   }),
+
+  watch: {},
+
   methods: {
     mergeProps,
+
+    deleteLine(id) {
+      this.$emit("delete-line", id);
+    },
   },
-  components: { BaseIcon },
 };
 </script>
 

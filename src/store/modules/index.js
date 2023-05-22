@@ -15,10 +15,16 @@ export default {
     setStorageHeaders({ commit }, headers) {
       commit('setStorageHeaders', headers);
     },
+
     setStorageColumns({ commit }, columns) {
       commit('setStorageColumns', columns);
     },
+
+    async deletedLine({ commit }, id) {
+      commit('deletedLine', id);
+    },
   },
+
   mutations: {
     createColumn(state, productItem) {
       state.products.push(productItem);
@@ -40,7 +46,14 @@ export default {
     setStorageColumns(state, columns) {
       state.products = columns;
     },
+
+    deletedLine(state, id) {
+      state.products = state.products.filter((el) => {
+        return el.id !== id;
+      });
+    },
   },
+
   state: {
     headers: [
       {
@@ -49,6 +62,7 @@ export default {
         sortable: false,
         key: 'action',
         show: true,
+        id: null,
       },
       {
         title: 'Наименование еденицы',
@@ -73,7 +87,7 @@ export default {
     ],
     products: [
       {
-        one: '',
+        id: 1,
         action: 'действие',
         name: 'Серебренный щебень фр. 2-5 мм, 25кг',
         newCol: 'Новая колонка',
@@ -83,6 +97,7 @@ export default {
         total: '15623',
       },
       {
+        id: 2,
         action: 'действие',
         name: 'Золотой щебень фр. 2-5 мм, 25кг',
         newCol: 'Новая колонка',
@@ -92,6 +107,7 @@ export default {
         total: '15623',
       },
       {
+        id: 3,
         action: 'действие',
         name: 'Мраморный щебень фр. 2-5 мм, 25кг',
         newCol: 'Новая колонка',
@@ -101,6 +117,7 @@ export default {
         total: '15623',
       },
       {
+        id: 4,
         action: 'действие',
         name: 'Мраморный щебень фр. 2-5 мм, 25кг',
         newCol: 'Новая колонка',
@@ -112,6 +129,7 @@ export default {
     ],
     changeColumns: false,
   },
+
   getters: {
     getHeaders(state) {
       return state.headers;

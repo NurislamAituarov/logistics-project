@@ -41,6 +41,9 @@ export default {
     ...mapActions(["fetchColumn", "setChangeColumns"]),
 
     addLoad() {
+      const current_date = new Date();
+      const id = Math.floor(current_date.getTime() / 1000);
+
       this.fetchColumn({
         one: "",
         action: "",
@@ -50,6 +53,7 @@ export default {
         quantity: 0,
         product: "Тестовое название",
         total: "0000",
+        id,
       });
     },
 
