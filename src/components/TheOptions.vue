@@ -17,7 +17,9 @@
       <v-list>
         <v-list-item v-for="(item, index) in items" :key="index">
           <v-list-item-title
-            @click="item.title === 'Удалить' && deleteLine(idLine)"
+            @click="
+              item.title === 'Удалить' ? deleteLine(idLine) : editLine(idLine)
+            "
             class="list__item-title"
             >{{ item.title }}</v-list-item-title
           >
@@ -30,6 +32,7 @@
 <script>
 import { mergeProps } from "vue";
 import BaseIcon from "./icons/BaseIcon.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "TheOptions",
@@ -37,7 +40,8 @@ export default {
   components: { BaseIcon },
 
   props: {
-    idLine: { type: String, default: "" },
+    idLine: { type: [String, Number], default: "" },
+    itemLine: { type: Object, default: () => {} },
   },
 
   data: () => ({
@@ -47,10 +51,16 @@ export default {
   watch: {},
 
   methods: {
+    ...mapActions(["setEditLine"]),
     mergeProps,
 
     deleteLine(id) {
       this.$emit("delete-line", id);
+    },
+
+    editLine(id) {
+      this.$emit("open-dialog-window");
+      this.setEditLine(id);
     },
   },
 };
