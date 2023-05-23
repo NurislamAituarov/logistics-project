@@ -48,7 +48,11 @@
           />
           {{ index + 1 }}
 
-          <TheOptions :idLine="columns[index].id" @delete-line="deleteLine" />
+          <TheOptions
+            :idLine="columns[index].id"
+            @delete-line="deleteLine"
+            @open-dialog-window="() => $emit('open-dialog-window')"
+          />
         </td>
 
         <td v-if="!hideColumns.includes(headers[1].key)">
@@ -175,7 +179,7 @@ export default {
     };
   },
 
-  emits: ["onSave"],
+  emits: ["on-save", "open-dialog-window"],
 
   computed: {
     ...mapGetters([

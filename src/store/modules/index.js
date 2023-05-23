@@ -1,6 +1,6 @@
 export default {
   actions: {
-    async fetchColumn({ commit }, productItem) {
+    fetchColumn({ commit }, productItem) {
       commit('createColumn', productItem);
     },
 
@@ -22,6 +22,14 @@ export default {
 
     async deletedLine({ commit }, id) {
       commit('deletedLine', id);
+    },
+
+    setEditLine({ commit }, id) {
+      commit('setEditLine', id);
+    },
+
+    setSaveLineEdit({ commit }, { data, id }) {
+      commit('setSaveLineEdit', { data, id });
     },
   },
 
@@ -50,6 +58,18 @@ export default {
     deletedLine(state, id) {
       state.products = state.products.filter((el) => {
         return el.id !== id;
+      });
+    },
+
+    setEditLine(state, id) {
+      state.activeLineEdit = state.products.filter((el) => el.id === id)[0];
+    },
+
+    setSaveLineEdit(state, { data, id }) {
+      state.products = state.products.map((el) => {
+        if (el.id === id) return data;
+
+        return el;
       });
     },
   },
@@ -128,6 +148,8 @@ export default {
       },
     ],
     changeColumns: false,
+
+    activeLineEdit: {},
   },
 
   getters: {
@@ -141,6 +163,10 @@ export default {
 
     getChangeColumns(state) {
       return state.changeColumns;
+    },
+
+    getEditLine(state) {
+      return state.activeLineEdit;
     },
   },
 };
