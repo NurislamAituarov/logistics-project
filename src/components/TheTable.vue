@@ -122,7 +122,7 @@
 
         <td>
           <div class="wrapper__column">
-            {{ item.columns[headers[6]["key"]] }}
+            {{ calculateTotal(columns[index].id) }}
             <div
               v-if="headers[6].key === 'name'"
               class="tbody__column-redirect"
@@ -498,6 +498,12 @@ export default {
       await this.deletedLine(id);
       this.setNewOrderHeaders(this.newOrderHeaders);
       this.setNewOrderLines(this.newOrderLines);
+    },
+
+    calculateTotal(id) {
+      const { price, quantity } = this.columns.filter((el) => el.id === id)[0];
+
+      return price * quantity;
     },
   },
 };
