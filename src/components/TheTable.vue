@@ -55,7 +55,31 @@
           />
         </td>
 
-        <td v-if="!hideColumns.includes(headers[1].key)">
+        <td
+          v-for="header of showUpdateHeaders.filter((el, i) => i !== 0)"
+          :key="header.key"
+        >
+          <div
+            class="wrapper__column"
+            :class="{ tbody__column: header.key === 'name' }"
+          >
+            {{
+              header.key !== "total"
+                ? item.columns[header["key"]]
+                : calculateTotal(columns[index].id)
+            }}
+
+            <div
+              v-if="header.key === 'name'"
+              class="tbody__column-redirect"
+              @click="openMyLoadPage(item.columns.name)"
+            >
+              <p class="right-arrow_2"></p>
+            </div>
+          </div>
+        </td>
+
+        <!-- <td v-if="!hideColumns.includes(headers[1].key)">
           <div
             class="wrapper__column"
             :class="{ tbody__column: headers[1].key === 'name' }"
@@ -131,7 +155,7 @@
               <p class="right-arrow_2"></p>
             </div>
           </div>
-        </td>
+        </td> -->
       </tr>
     </template>
   </v-data-table>
@@ -176,6 +200,8 @@ export default {
       columnsKey: 0,
 
       hideColumns: [],
+
+      showUpdateHeaders: [],
     };
   },
 
@@ -188,12 +214,6 @@ export default {
       "getValue",
       "getChangeColumns",
     ]),
-
-    showUpdateHeaders() {
-      return this.headers.filter((item) => {
-        return item.show;
-      });
-    },
 
     tableHeight() {
       const screenHeight = window.innerHeight;
@@ -221,8 +241,12 @@ export default {
     },
 
     headers: {
-      handler(newValue) {
-        this.newOrderHeaders = newValue;
+      handler(oldValue, newValue) {
+        this.newOrderHeaders = oldValue;
+        if (newValue.length)
+          this.showUpdateHeaders = this.headers.filter((item) => {
+            return item.show;
+          });
 
         newValue.forEach((el) => {
           if (!el.show && !this.hideColumns.includes(el.key)) {
@@ -252,6 +276,7 @@ export default {
   mounted() {
     this.columns = this.getProducts;
     this.headers = this.getHeaders;
+    this.showUpdateHeaders = this.getValue("new_order_headers_cut");
 
     setTimeout(() => {
       this.updateSizeColumn();
@@ -450,8 +475,11 @@ export default {
         Sortable.create(element, {
           handle: ".headerHandle",
           onEnd({ newIndex, oldIndex }) {
-            const headerSelected = _self.headers.splice(oldIndex, 1)[0];
-            _self.headers.splice(newIndex, 0, headerSelected);
+            const headerSelected = _self.showUpdateHeaders.splice(
+              oldIndex,
+              1
+            )[0];
+            _self.showUpdateHeaders.splice(newIndex, 0, headerSelected);
             _self.saveChange = "change";
           },
           ghostClass: "sortable-ghost_header",
@@ -485,6 +513,10 @@ export default {
 
     setNewOrderHeaders(newValue) {
       this.setValue({ name: "new_order_headers", value: newValue });
+      this.setValue({
+        name: "new_order_headers_cut",
+        value: this.showUpdateHeaders,
+      });
     },
     setNewOrderLines(newValue) {
       this.setValue({ name: "new_order_lines", value: newValue });
@@ -638,5 +670,13 @@ td {
 
 .column_action {
   pointer-events: none;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
 }
 </style>
