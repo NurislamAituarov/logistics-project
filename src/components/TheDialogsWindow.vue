@@ -48,7 +48,6 @@
                 :rules="[rules.required, rules.number]"
                 label="Кол-во*"
                 maxlength="5"
-                v-numeric
                 variant="solo"
                 hint="Количество груза"
                 persistent-hint
@@ -63,7 +62,12 @@
         <v-btn color="blue-darken-1" variant="text" @click="closeDialogsWindow">
           Close
         </v-btn>
-        <v-btn color="blue-darken-1" variant="text" @click="saveLineEdit">
+        <v-btn
+          color="blue-darken-1"
+          :disabled="!itemEdit.price || !itemEdit.quantity"
+          variant="text"
+          @click="saveLineEdit"
+        >
           Save
         </v-btn>
       </v-card-actions>

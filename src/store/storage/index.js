@@ -15,6 +15,7 @@ export default {
     size_column_total: getItem(storage.size_column_total),
 
     new_order_headers: getItem(storage.new_order_headers),
+    new_order_headers_cut: getItem(storage.new_order_headers_cut),
     new_order_lines: getItem(storage.new_order_lines),
   },
   getters: {
