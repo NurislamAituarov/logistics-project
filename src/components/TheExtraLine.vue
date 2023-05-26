@@ -21,7 +21,10 @@
       >
         <template v-slot:activator="{ props }">
           <BaseIcon
-            class="btn_setting"
+            :class="{
+              btn_setting: true,
+              'anim__icon-setting': menuOpen,
+            }"
             name="setting"
             width="16"
             height="16"
@@ -38,16 +41,22 @@
               class="list__item-title"
               >{{ item.title }}</v-list-item-title
             >
+            <v-icon
+              :color="animActive !== item.title ? 'grey darken-3' : '#1253a2'"
+              :class="{ anim__icon: animActive === item.title }"
+            >
+              mdi-chevron-right</v-icon
+            >
           </v-list-item>
         </v-list>
 
         <v-list v-else class="setting_list-headers">
           <v-list-item v-for="(item, index) in headers" :key="index">
             <BaseCheckbox
-              :label="item.key"
+              :label="item.title"
               :value="item.show"
               :disabled="item.key === 'action' || item.key === 'total'"
-              @input="onChange($event, item.key)"
+              @input="onChange($event, item.key, index)"
             />
           </v-list-item>
         </v-list>
@@ -60,7 +69,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import BaseIcon from "./icons/BaseIcon.vue";
-import BaseCheckbox from "./BaseChekbox.vue";
+import BaseCheckbox from "./base/BaseChekbox.vue";
 
 export default {
   name: "TheExtraLine",
@@ -75,21 +84,8 @@ export default {
     return {
       headers: [],
       items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
-      itemColumns: [
-        {
-          name: "Item #1",
-          id: 1,
-        },
-        {
-          name: "Item #2",
-          id: 2,
-        },
-        {
-          name: "Item #3",
-          id: 3,
-        },
-      ],
       activeItem: "",
+      animActive: null,
       menuOpen: false,
     };
   },
@@ -122,18 +118,30 @@ export default {
     ...mapActions(["setChangeDisabled"]),
 
     onSelectedSetting(value) {
-      this.activeItem = value;
+      this.animActive = value;
+      setTimeout(() => {
+        this.activeItem = value;
+        this.animActive = null;
+      }, 300);
     },
 
-    onChange(e, key) {
-      this.setChangeDisabled({ show: e.target.checked, key });
+    onChange(e, key, index) {
+      this.setChangeDisabled({ show: e.target.checked, key, index });
     },
   },
 };
 </script>
 
 
+
+
+
+
 <style scoped lang="scss">
+.v-list-item ::v-deep div {
+  display: flex;
+}
+
 .extra_line {
   width: 100%;
   height: 50px;
@@ -156,6 +164,8 @@ export default {
 .btn_setting {
   cursor: pointer;
   width: fit-content;
+  transition: 1s;
+  transform: rotateZ(180deg);
 }
 
 .list__item-title {
@@ -167,5 +177,15 @@ export default {
 
 .setting_list-headers {
   width: 210px;
+}
+
+.anim__icon {
+  transition: 0.5s;
+  transform: translateX(8px);
+}
+
+.anim__icon-setting {
+  transition: 1s;
+  transform: rotateZ(360deg);
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="1024">
+  <v-dialog v-model="dialog" persistent width="800">
     <v-card>
       <v-card-title>
         <span class="text-h5">Изменить данные строки</span>
@@ -60,7 +60,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue-darken-1" variant="text" @click="closeDialogsWindow">
-          Close
+          Закрыть
         </v-btn>
         <v-btn
           color="blue-darken-1"
@@ -68,7 +68,7 @@
           variant="text"
           @click="saveLineEdit"
         >
-          Save
+          Сохранить
         </v-btn>
       </v-card-actions>
     </v-card>
