@@ -78,84 +78,6 @@
             </div>
           </div>
         </td>
-
-        <!-- <td v-if="!hideColumns.includes(headers[1].key)">
-          <div
-            class="wrapper__column"
-            :class="{ tbody__column: headers[1].key === 'name' }"
-          >
-            {{ item.columns[headers[1]["key"]] }}
-
-            <div
-              v-if="headers[1].key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td>
-        <td v-if="!hideColumns.includes(headers[2].key)">
-          <div class="wrapper__column">
-            {{ item.columns[headers[2]["key"]] }}
-            <div
-              v-if="headers[2].key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td>
-        <td v-if="!hideColumns.includes(headers[3].key)">
-          <div class="wrapper__column">
-            {{ item.columns[headers[3]["key"]] }}
-            <div
-              v-if="headers[3].key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td>
-        <td v-if="!hideColumns.includes(headers[4].key)">
-          <div class="wrapper__column">
-            {{ item.columns[headers[4]["key"]] }}
-            <div
-              v-if="headers[4].key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td>
-        <td v-if="!hideColumns.includes(headers[5].key)">
-          <div class="wrapper__column">
-            {{ item.columns[headers[5]["key"]] }}
-            <div
-              v-if="headers[5].key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td>
-
-        <td>
-          <div class="wrapper__column">
-            {{ calculateTotal(columns[index].id) }}
-            <div
-              v-if="headers[6].key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td> -->
       </tr>
     </template>
   </v-data-table>
@@ -198,9 +120,7 @@ export default {
       newOrderLines: [],
 
       columnsKey: 0,
-
       hideColumns: [],
-
       showUpdateHeaders: [],
     };
   },
@@ -210,6 +130,7 @@ export default {
   computed: {
     ...mapGetters([
       "getHeaders",
+      "getHeaderActive",
       "getProducts",
       "getValue",
       "getChangeColumns",
@@ -243,10 +164,6 @@ export default {
     headers: {
       handler(oldValue, newValue) {
         this.newOrderHeaders = oldValue;
-        if (newValue.length)
-          this.showUpdateHeaders = this.headers.filter((item) => {
-            return item.show;
-          });
 
         newValue.forEach((el) => {
           if (!el.show && !this.hideColumns.includes(el.key)) {
@@ -260,6 +177,19 @@ export default {
         this.getDataTableHTML();
       },
       deep: true,
+    },
+
+    getHeaderActive(item) {
+      if (item.show) {
+        this.showUpdateHeaders = this.showUpdateHeaders.filter(
+          (el) => el.key !== item.key
+        );
+        this.showUpdateHeaders.splice(item.index, 0, item);
+      } else {
+        this.showUpdateHeaders = this.showUpdateHeaders.filter(
+          (el) => el.key !== item.key
+        );
+      }
     },
 
     columns: {
@@ -276,7 +206,8 @@ export default {
   mounted() {
     this.columns = this.getProducts;
     this.headers = this.getHeaders;
-    this.showUpdateHeaders = this.getValue("new_order_headers_cut");
+    this.showUpdateHeaders =
+      this.getValue("new_order_headers_cut") || this.getHeaders;
 
     setTimeout(() => {
       this.updateSizeColumn();
@@ -628,7 +559,7 @@ td {
   right: 0;
   width: 21px;
   height: 100%;
-  background-color: #cccccc;
+  background-color: #f6f5f3;
   display: flex;
   align-items: center;
   justify-content: center;

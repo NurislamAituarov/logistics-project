@@ -6,6 +6,7 @@
     :false-value="false"
     :label="label"
     :disabled="disabled"
+    color="#1253a2"
     hide-details
     off-icon="$iconCheckbox"
     on-icon="$iconCheckboxActive"

@@ -20,7 +20,7 @@
 
 <script>
 import BaseIcon from "./icons/BaseIcon.vue";
-import BaseBtn from "./BaseBtn.vue";
+import BaseBtn from "./base/BaseBtn.vue";
 
 export default {
   name: "TheAddLine",
