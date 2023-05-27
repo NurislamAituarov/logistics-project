@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "start": "node server.js"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
     "column-resizer": "^1.4.0",
     "core-js": "^3.8.3",
+    "express": "^4.18.2",
     "roboto-fontface": "*",
     "sortablejs": "^1.15.0",
     "vue": "^3.2.13",
