@@ -19,7 +19,8 @@ export default {
     ...mapGetters(["getValue"]),
   },
 
-  mounted() {
+  created() {
+    this.$router.push(`/load`);
     this.getValueStorage();
   },
 
