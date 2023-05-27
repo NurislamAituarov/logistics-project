@@ -1,5 +1,5 @@
 <template>
-  <h1>New Page</h1>
+  <h1 class="pa-5">New Page</h1>
 </template>
 
 <script>

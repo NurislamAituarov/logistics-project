@@ -7,6 +7,7 @@
       :key="index"
       v-model="item.item"
       :disabled="disabled"
+      @click="activeListItem = item.list"
       multiple
     >
       <v-expansion-panel class="expansion__panel">
@@ -43,16 +44,17 @@ export default {
           nestedList: ["Новая стараница", "aaaaaaaa"],
         },
         {
-          item: [],
+          item: [0],
           list: "Перевозчики",
           nestedList: ["Задачи", "Аналитика"],
         },
         { item: [], list: "Адреса", nestedList: ["cccccccc", " vvvvvvv"] },
       ],
+      activeListItem: "",
 
       disabled: false,
       readonly: false,
-      activeMenuItem: null,
+      activeMenuItem: "Аналитика",
     };
   },
 
@@ -68,6 +70,14 @@ export default {
           return { ...list, item: [] };
         });
       }
+    },
+
+    activeListItem(value) {
+      this.menuListItems = this.menuListItems.map((el) => {
+        if (value !== el.list) return { ...el, item: [] };
+
+        return el;
+      });
     },
   },
 
