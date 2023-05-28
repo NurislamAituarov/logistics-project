@@ -1,7 +1,7 @@
 {
   "name": "compos",
   "version": "0.1.0",
-  "homepage": "https://nurislamaituarov.github.io/logistics-project/load",
+  "homepage": "https://nurislamaituarov.github.io/logistics-project/",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
