@@ -51,7 +51,7 @@ export default {
         {
           item: [],
           list: "Адреса",
-          nestedList: ["Новая стараница", "Дополнительная страница"],
+          nestedList: ["Новый адрес", "Дополнительный адрес"],
         },
       ],
       activeListItem: "",
