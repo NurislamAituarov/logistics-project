@@ -1,11 +1,14 @@
 {
   "name": "compos",
   "version": "0.1.0",
+  "homepage": "https://nurislamaituarov.github.io/logistics-project/",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
@@ -29,6 +32,7 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "gh-pages": "^5.0.0",
     "sass": "^1.62.1",
     "sass-loader": "^13.2.2",
     "vue-cli-plugin-vuetify": "~2.5.8",
