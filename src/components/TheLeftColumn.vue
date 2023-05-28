@@ -41,14 +41,18 @@ export default {
         {
           item: [],
           list: "Логистика",
-          nestedList: ["Новая стараница", "aaaaaaaa"],
+          nestedList: ["Новая стараница", "Дополнительная страница"],
         },
         {
           item: [0],
           list: "Перевозчики",
           nestedList: ["Задачи", "Аналитика"],
         },
-        { item: [], list: "Адреса", nestedList: ["cccccccc", " vvvvvvv"] },
+        {
+          item: [],
+          list: "Адреса",
+          nestedList: ["Новая стараница", "Дополнительная страница"],
+        },
       ],
       activeListItem: "",
 
