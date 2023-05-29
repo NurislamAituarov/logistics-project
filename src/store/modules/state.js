@@ -74,4 +74,5 @@ export const state = {
 
   changeColumns: false,
   activeLineEdit: {},
+  menuWindow: false,
 };
