@@ -40,4 +40,8 @@ export const mutations = {
       return el;
     });
   },
+
+  setMenuWindow(state, active) {
+    state.menuWindow = active;
+  },
 };

@@ -1,6 +1,16 @@
 <template>
-  <div class="left__sidebar">
-    <img :src="img" alt="" class="mb-10" />
+  <div class="left__sidebar" :class="{ 'mobile-menu': getMenuWindow }">
+    <img :src="img" alt="" class="mb-10 logo" />
+
+    <div
+      class="d-flex justify-space-between align-center pl-3 pr-3 mb-10 menu-header"
+    >
+      <h2>Меню</h2>
+      <p @click="closeMenuWindow" class="menu-return">
+        Вернутся
+        <v-icon color="#1253a2"> mdi-chevron-right</v-icon>
+      </p>
+    </div>
 
     <v-expansion-panels
       v-for="(item, index) of menuListItems"
@@ -11,9 +21,7 @@
       multiple
     >
       <v-expansion-panel class="expansion__panel">
-        <v-expansion-panel-title expand-icon="" collapse-icon="">{{
-          item.list
-        }}</v-expansion-panel-title>
+        <v-expansion-panel-title>{{ item.list }}</v-expansion-panel-title>
         <v-expansion-panel-text
           v-for="(list, ind) of item.nestedList"
           :key="ind"
@@ -30,6 +38,7 @@
 
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import img from "../assets/logo-compas.png";
 
 export default {
@@ -62,6 +71,10 @@ export default {
     };
   },
 
+  computed: {
+    ...mapGetters(["getMenuWindow"]),
+  },
+
   watch: {
     "$route.path"() {
       if (this.$route.path === "/load") {
@@ -86,6 +99,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(["setMenuWindow"]),
+
     openPage(page) {
       this.activeMenuItem = page;
       if (page === "Аналитика") {
@@ -93,6 +108,9 @@ export default {
       } else {
         this.$router.push("/");
       }
+    },
+    closeMenuWindow() {
+      this.setMenuWindow(false);
     },
   },
 };
@@ -108,6 +126,14 @@ export default {
     margin: 0 auto;
   }
 }
+.mobile-menu {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 100;
+}
 
 .expansion__panel {
   background: none;
@@ -115,6 +141,8 @@ export default {
 }
 .menu__item {
   cursor: pointer;
+  padding-left: 10px;
+
   div {
     padding: 8px 24px !important;
   }

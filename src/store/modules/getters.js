@@ -18,4 +18,8 @@ export const getters = {
   getEditLine(state) {
     return state.activeLineEdit;
   },
+
+  getMenuWindow(state) {
+    return state.menuWindow;
+  },
 };

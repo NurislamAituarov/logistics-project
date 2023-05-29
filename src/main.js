@@ -7,6 +7,7 @@ import store from './store';
 import TheLoad from '@/pages/loadboard/TheLoad.vue';
 import TheBid from '@/pages/bid/About.vue';
 import MyLoad from '@/pages/my-load/my-load.vue';
+import './assets/styles/main.css';
 
 const router = createRouter({
   // 4. Provide the history implementation to use. We are using the hash history for simplicity here.

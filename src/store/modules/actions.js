@@ -30,4 +30,8 @@ export const actions = {
   setSaveLineEdit({ commit }, { data, id }) {
     commit('setSaveLineEdit', { data, id });
   },
+
+  setMenuWindow({ commit }, active) {
+    commit('setMenuWindow', active);
+  },
 };

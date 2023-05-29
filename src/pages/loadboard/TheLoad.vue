@@ -1,6 +1,14 @@
 <template>
   <v-card class="right__column">
-    <h1 class="pl-10">Проведение ТО и мелкий ремонт</h1>
+    <div class="pl-10 mb-5 d-flex align-start container__title">
+      <BaseIcon
+        name="drag"
+        width="20"
+        class="mt-2 menu-burger"
+        @click="openMenuWindow"
+      />
+      <h1>Проведение ТО и мелкий ремонт</h1>
+    </div>
 
     <v-tabs v-model="tab" class="pl-10 tabs">
       <v-tab
@@ -13,11 +21,13 @@
       >
     </v-tabs>
 
-    <v-card-text class="pa-0 mt-5">
+    <v-card-text class="pa-0 mt-5 card__text">
       <v-window v-model="tab">
-        <v-window-item value="one" class="pa-6 pl-10"> One </v-window-item>
+        <v-window-item value="one" class="pa-6 pl-10 card__tab">
+          One
+        </v-window-item>
 
-        <v-window-item value="two" class="pa-6 pl-10">
+        <v-window-item value="two" class="pa-6 pl-10 card__tab">
           <TheAddLine @add-load="addLoad" />
           <TheTable
             :saveTemplate="saveTemplate"
@@ -26,7 +36,9 @@
           />
         </v-window-item>
 
-        <v-window-item value="three" class="pa-6 pl-10"> Three </v-window-item>
+        <v-window-item value="three" class="pa-6 pl-10 card__tab">
+          Three
+        </v-window-item>
       </v-window>
     </v-card-text>
   </v-card>
@@ -44,6 +56,7 @@ import { mapActions, mapGetters } from "vuex";
 import TheAddLine from "@/components/TheAddLine.vue";
 import TheTable from "@/components/TheTable.vue";
 import TheDialogsWindow from "@/components/TheDialogsWindow.vue";
+import BaseIcon from "@/components/icons/BaseIcon.vue";
 
 export default {
   name: "TheLoad",
@@ -57,15 +70,27 @@ export default {
     page: "",
     saveTemplate: false,
     dialog: false,
+    menuWindowActive: false,
   }),
-  components: { TheAddLine, TheTable, TheDialogsWindow },
+  components: { TheAddLine, TheTable, TheDialogsWindow, BaseIcon },
 
   computed: {
-    ...mapGetters(["getProducts"]),
+    ...mapGetters(["getProducts", "getMenuWindow"]),
+  },
+
+  watch: {
+    getMenuWindow(value) {
+      this.menuWindowActive = value;
+    },
   },
 
   methods: {
-    ...mapActions(["fetchColumn", "setChangeColumns", "setValue"]),
+    ...mapActions([
+      "fetchColumn",
+      "setChangeColumns",
+      "setValue",
+      "setMenuWindow",
+    ]),
 
     addLoad() {
       const current_date = new Date();
@@ -110,6 +135,9 @@ export default {
     capitalizeFirstLetter(title) {
       return title[0].toUpperCase() + title.slice(1);
     },
+    openMenuWindow() {
+      this.setMenuWindow(true);
+    },
   },
 };
 </script>
@@ -126,7 +154,6 @@ h1 {
   line-height: normal;
   letter-spacing: normal;
   color: black;
-  margin-bottom: 20px;
 }
 .wrapper {
   width: 100vw;
