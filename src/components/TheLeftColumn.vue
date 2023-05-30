@@ -1,51 +1,38 @@
 <template>
-  <div class="left__sidebar" :class="{ 'mobile-menu': getMenuWindow }">
-    <img :src="img" alt="" class="mb-10 logo" />
-
-    <div
-      class="d-flex justify-space-between align-center pl-3 pr-3 mb-10 menu-header"
-    >
-      <h2>Меню</h2>
-      <p @click="closeMenuWindow" class="menu-return">
-        Вернутся
-        <v-icon color="#1253a2"> mdi-chevron-right</v-icon>
-      </p>
-    </div>
-
-    <v-expansion-panels
-      v-for="(item, index) of menuListItems"
-      :key="index"
-      v-model="item.item"
+  <v-navigation-drawer v-model="drawer" temporary>
+    <TheMenuSidebar
+      :get-menu-window="getMenuWindow"
+      :menu-list-items="menuListItems"
       :disabled="disabled"
-      @click="activeListItem = item.list"
-      multiple
-    >
-      <v-expansion-panel class="expansion__panel">
-        <v-expansion-panel-title>{{ item.list }}</v-expansion-panel-title>
-        <v-expansion-panel-text
-          v-for="(list, ind) of item.nestedList"
-          :key="ind"
-          class="menu__item"
-          :class="{ 'menu__item-active': activeMenuItem === list }"
-          @click="openPage(list)"
-        >
-          {{ list }}
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-  </div>
+      :active-menu-item="activeMenuItem"
+      @close-menu-window="closeMenuWindow"
+      @open-page="openPage"
+      @close-unnecessary-selects="closeUnnecessarySelects"
+    />
+  </v-navigation-drawer>
+  <TheMenuSidebar
+    :get-menu-window="false"
+    :menu-list-items="menuListItems"
+    :disabled="disabled"
+    :active-menu-item="activeMenuItem"
+    @close-menu-window="closeMenuWindow"
+    @open-page="openPage"
+    @close-unnecessary-selects="closeUnnecessarySelects"
+  />
 </template>
 
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import img from "../assets/logo-compas.png";
+import TheMenuSidebar from "@/components/TheMenuSidebar.vue";
 
 export default {
   name: "TheLeftColumn",
+
+  components: { TheMenuSidebar },
+
   data() {
     return {
-      img,
       menuListItems: [
         {
           item: [],
@@ -68,6 +55,7 @@ export default {
       disabled: false,
       readonly: false,
       activeMenuItem: "Аналитика",
+      drawer: null,
     };
   },
 
@@ -96,6 +84,18 @@ export default {
         return el;
       });
     },
+
+    activeMenuItem() {
+      this.setMenuWindow(false);
+    },
+
+    getMenuWindow(value) {
+      this.drawer = value;
+    },
+
+    drawer(value) {
+      if (!value) this.setMenuWindow(false);
+    },
   },
 
   methods: {
@@ -112,54 +112,10 @@ export default {
     closeMenuWindow() {
       this.setMenuWindow(false);
     },
+
+    closeUnnecessarySelects(list) {
+      this.activeListItem = list;
+    },
   },
 };
 </script>
-
-<style scoped lang="scss">
-.left__sidebar {
-  width: 229px;
-  background: #1c2734;
-  padding: 31px 0 10px;
-  img {
-    display: block;
-    margin: 0 auto;
-  }
-}
-.mobile-menu {
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  z-index: 100;
-}
-
-.expansion__panel {
-  background: none;
-  color: white;
-}
-.menu__item {
-  cursor: pointer;
-  padding-left: 10px;
-
-  div {
-    padding: 8px 24px !important;
-  }
-}
-.menu__item-active {
-  color: #fd8301;
-  position: relative;
-  transition: 0.3s;
-
-  &::before {
-    content: "";
-    position: absolute;
-    background-color: #fd8301;
-    width: 2px;
-    height: 100%;
-    top: 0;
-    left: 0;
-  }
-}
-</style>
