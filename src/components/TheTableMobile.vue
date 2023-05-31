@@ -4,10 +4,14 @@
       v-for="(item, index) of columns"
       :key="item.id"
       class="data__table-mobile"
-      @click="expandBlock(item.id)"
+      @click="expandBlock($event, item.id)"
     >
-      <span>Номер строки</span>
-      <div class="d-flex mt-2" :class="{ 'mb-4': activeBlockId == item.id }">
+      <span class="header-title">Номер строки</span>
+      <div
+        ref="refHeaderDrag"
+        class="d-flex mt-2"
+        :class="{ 'mb-4': activeBlockId == item.id }"
+      >
         <BaseIcon
           class="combined-shape rowHandle"
           name="dragV2"
@@ -17,18 +21,22 @@
         />
         {{ index + 1 }}
       </div>
+
       <template v-if="activeBlockId == item.id">
-        <div v-for="header of headers" :key="header.key" class="mb-4">
+        <div v-for="header of headers" :key="header.key" class="mb-2">
           <div>
-            {{ header.title }}
+            <span class="header-title">
+              {{ header.title }}
+            </span>
             <TheOptions
               v-if="header.key === 'action'"
               :idLine="items[index].id"
-              @delete-line="deleteLine"
-              @open-dialog-window="() => $emit('open-dialog-window')"
+              @delete-line="onDeleteLine"
+              @open-dialog-window="$emit('open-dialog-window')"
             />
             <div
-              class="wrapper__column mt-2"
+              v-if="header.key !== 'action'"
+              class="wrapper__column"
               :class="{ tbody__column: header.key === 'name' }"
             >
               {{
@@ -40,7 +48,7 @@
               <div
                 v-if="header.key === 'name'"
                 class="tbody__column-redirect"
-                @click="openMyLoadPage(item.name)"
+                @click="$emit('open-my-load-page', item.name)"
               >
                 <p class="right-arrow_2"></p>
               </div>
@@ -72,6 +80,8 @@ export default {
       activeBlockId: null,
     };
   },
+
+  emits: ["delete-line", "open-my-load-page", "open-dialog-window"],
 
   watch: {
     items() {
@@ -105,10 +115,16 @@ export default {
       });
     },
 
-    expandBlock(id) {
+    expandBlock(event, id) {
+      (this.$refs.refHeaderDrag.includes(event.target) ||
+        event.currentTarget === event.target) &&
       id == this.activeBlockId
         ? (this.activeBlockId = null)
         : (this.activeBlockId = id);
+    },
+
+    onDeleteLine(id) {
+      this.$emit("delete-line", id);
     },
   },
 };
@@ -126,6 +142,7 @@ export default {
   border-radius: 10px;
   border: 1px solid rgb(0, 0, 0, 0.12) !important;
   padding: 15px;
+  padding-top: 10px;
   width: 100%;
   min-height: 62px;
   margin-bottom: 10px;
@@ -136,5 +153,33 @@ export default {
   padding: 10px 15px;
   border: 1px solid#cccccc;
   border-radius: 5px;
+  font-size: 16px;
+  margin-top: 5px;
+}
+.tbody__column-redirect {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 21px;
+  height: 100%;
+  background-color: #f6f5f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .right-arrow_2 {
+    border: 5px solid transparent;
+    display: inline-flex;
+    border-left: 5px solid gray;
+    border-right: none;
+  }
+}
+.tbody__column-redirect:hover {
+  cursor: pointer;
+}
+
+.header-title {
+  color: #8f8f8f;
+  font-size: 10px;
+  line-height: 14px;
 }
 </style>
