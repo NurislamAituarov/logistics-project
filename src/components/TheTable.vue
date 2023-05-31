@@ -212,8 +212,11 @@ export default {
     },
   },
 
-  mounted() {
+  created() {
     this.updateWidth();
+  },
+
+  mounted() {
     this.columns = this.getProducts;
     this.headers = this.getHeaders;
     this.showUpdateHeaders =
@@ -222,8 +225,10 @@ export default {
       this.updateSizeColumn();
       this.getDataTableHTML(this);
     });
-    // this.changeSortColumns();
-    // this.changeSortHeaders();
+    if (this.width > 678) {
+      this.changeSortColumns();
+      this.changeSortHeaders();
+    }
   },
 
   unmounted() {
