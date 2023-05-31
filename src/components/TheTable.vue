@@ -96,12 +96,16 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import Sortable from "sortablejs";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import TheExtraLine from "./TheExtraLine.vue";
 import TheOptions from "./TheOptions.vue";
-import { saveTemplateSizeColumn, getDataTableHTML } from "@/lib/helpers";
+import {
+  saveTemplateSizeColumn,
+  getDataTableHTML,
+  changeSortColumns,
+  changeSortHeaders,
+} from "@/lib/helpers";
 import TheTableMobile from "./TheTableMobile.vue";
 
 export default {
@@ -233,8 +237,11 @@ export default {
       this.getDataTableHTML(this);
     });
     if (this.width > 678) {
-      this.changeSortColumns();
-      this.changeSortHeaders();
+      let table = document.querySelector("table tbody");
+      const element = document.getElementById("sort_key");
+
+      this.changeSortColumns(table);
+      this.changeSortHeaders(element);
     }
   },
 
@@ -288,39 +295,8 @@ export default {
     },
 
     getDataTableHTML,
-
-    changeSortHeaders() {
-      this.$nextTick(() => {
-        const element = document.getElementById("sort_key");
-
-        const _self = this;
-        Sortable.create(element, {
-          handle: ".headerHandle",
-          onEnd({ newIndex, oldIndex }) {
-            const headerSelected = _self.showUpdateHeaders.splice(
-              oldIndex,
-              1
-            )[0];
-            _self.showUpdateHeaders.splice(newIndex, 0, headerSelected);
-            _self.saveChange = "change";
-          },
-          ghostClass: "sortable-ghost_header",
-        });
-      });
-    },
-    changeSortColumns() {
-      let table = document.querySelector("table tbody");
-      const _self = this;
-      Sortable.create(table, {
-        handle: ".rowHandle",
-        onEnd({ newIndex, oldIndex }) {
-          const rowSelected = _self.columns.splice(oldIndex, 1)[0];
-          _self.columns.splice(newIndex, 0, rowSelected);
-          _self.saveChange = "change";
-        },
-        ghostClass: "sortable-ghost",
-      });
-    },
+    changeSortColumns,
+    changeSortHeaders,
 
     onSaveChange() {
       this.saveChange = "pending";

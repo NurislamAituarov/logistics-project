@@ -1,3 +1,5 @@
+import Sortable from 'sortablejs';
+
 export function saveTemplateSizeColumn() {
   const tables = document.getElementsByTagName('table');
 
@@ -124,4 +126,32 @@ export function getDataTableHTML(thisCopy) {
       return window.getComputedStyle(elm, null).getPropertyValue(css);
     }
   }
+}
+
+export function changeSortHeaders(element) {
+  this.$nextTick(() => {
+    const _self = this;
+    Sortable.create(element, {
+      handle: '.headerHandle',
+      onEnd({ newIndex, oldIndex }) {
+        const headerSelected = _self.showUpdateHeaders.splice(oldIndex, 1)[0];
+        _self.showUpdateHeaders.splice(newIndex, 0, headerSelected);
+        _self.saveChange = 'change';
+      },
+      ghostClass: 'sortable-ghost_header',
+    });
+  });
+}
+
+export function changeSortColumns(table) {
+  const _self = this;
+  Sortable.create(table, {
+    handle: '.rowHandle',
+    onEnd({ newIndex, oldIndex }) {
+      const rowSelected = _self.columns.splice(oldIndex, 1)[0];
+      _self.columns.splice(newIndex, 0, rowSelected);
+      _self.saveChange = 'change';
+    },
+    ghostClass: 'sortable-ghost',
+  });
 }

@@ -61,10 +61,9 @@
 </template>
 
 <script>
-import Sortable from "sortablejs";
-
 import TheOptions from "./TheOptions.vue";
 import BaseIcon from "./icons/BaseIcon.vue";
+import { changeSortColumns } from "@/lib/helpers";
 
 export default {
   name: "TheTableMobile",
@@ -90,7 +89,8 @@ export default {
   },
 
   mounted() {
-    this.changeSortColumns();
+    let table = document.querySelector(".data__table-wrapper");
+    this.changeSortColumns(table);
   },
 
   methods: {
@@ -100,20 +100,7 @@ export default {
       return price * quantity;
     },
 
-    changeSortColumns() {
-      let table = document.querySelector(".data__table-wrapper");
-
-      const _self = this;
-      Sortable.create(table, {
-        handle: ".rowHandle",
-        onEnd({ newIndex, oldIndex }) {
-          const rowSelected = _self.columns.splice(oldIndex, 1)[0];
-          _self.columns.splice(newIndex, 0, rowSelected);
-          _self.saveChange = "change";
-        },
-        ghostClass: "sortable-ghost",
-      });
-    },
+    changeSortColumns,
 
     expandBlock(event, id) {
       (this.$refs.refHeaderDrag.includes(event.target) ||
