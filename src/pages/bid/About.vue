@@ -3,7 +3,7 @@
     <BaseIcon
       name="drag"
       width="20"
-      class="mt-2 menu-burger"
+      class="menu-burger"
       @click="openMenuWindow"
     />
     <h1 class="pa-5">New Page</h1>
