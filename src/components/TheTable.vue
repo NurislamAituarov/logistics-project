@@ -84,7 +84,7 @@
     </template>
   </v-data-table>
 
-  <TheTableMobile else :headers="showUpdateHeaders" :items="columns" />
+  <TheTableMobile v-else :headers="showUpdateHeaders" :items="columns" />
 </template>
 
 <script>
