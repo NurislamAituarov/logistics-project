@@ -53,7 +53,7 @@
           <TheOptions
             :idLine="columns[index].id"
             @delete-line="deleteLine"
-            @open-dialog-window="() => $emit('open-dialog-window')"
+            @open-dialog-window="$emit('open-dialog-window')"
           />
         </td>
 
@@ -84,7 +84,14 @@
     </template>
   </v-data-table>
 
-  <TheTableMobile v-else :headers="showUpdateHeaders" :items="columns" />
+  <TheTableMobile
+    v-else
+    :headers="showUpdateHeaders"
+    :items="columns"
+    @delete-line="deleteLine"
+    @open-my-load-page="openMyLoadPage"
+    @open-dialog-window="$emit('open-dialog-window')"
+  />
 </template>
 
 <script>
