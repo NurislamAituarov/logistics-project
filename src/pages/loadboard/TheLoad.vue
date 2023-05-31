@@ -21,13 +21,13 @@
       >
     </v-tabs>
 
-    <v-card-text class="pa-0 mt-5 card__text">
+    <v-card-text class="pa-0 mt-5 card__container">
       <v-window v-model="tab">
-        <v-window-item value="one" class="pa-6 pl-10 card__tab">
+        <v-window-item value="one" class="pa-6 pl-10 card__item">
           One
         </v-window-item>
 
-        <v-window-item value="two" class="pa-6 pl-10 card__tab">
+        <v-window-item value="two" class="pa-6 pl-10 card__item">
           <TheAddLine @add-load="addLoad" />
           <TheTable
             :saveTemplate="saveTemplate"
@@ -36,7 +36,7 @@
           />
         </v-window-item>
 
-        <v-window-item value="three" class="pa-6 pl-10 card__tab">
+        <v-window-item value="three" class="pa-6 pl-10 card__item">
           Three
         </v-window-item>
       </v-window>
@@ -52,7 +52,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import { VTouch } from "vuetify/lib/directives";
 import TheAddLine from "@/components/TheAddLine.vue";
 import TheTable from "@/components/TheTable.vue";
 import TheDialogsWindow from "@/components/TheDialogsWindow.vue";
@@ -73,6 +73,9 @@ export default {
     menuWindowActive: false,
   }),
   components: { TheAddLine, TheTable, TheDialogsWindow, BaseIcon },
+  directives: {
+    VTouch,
+  },
 
   computed: {
     ...mapGetters(["getProducts", "getMenuWindow"]),
@@ -166,7 +169,10 @@ h1 {
   padding: 25px;
   padding-left: 0;
 }
-
+.card__container {
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+}
 .tab {
   color: #1253a2;
   font-family: MyriadPro;
@@ -180,5 +186,15 @@ h1 {
 }
 .tab__active {
   color: black;
+}
+
+@media (max-width: 678px) {
+  .tab {
+    padding: 0 10px;
+  }
+
+  .card__item {
+    padding: 10px !important;
+  }
 }
 </style>

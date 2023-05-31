@@ -50,7 +50,7 @@ export default {
     activeListItem: { type: String, default: "" },
   },
 
-  emits: ["close-menu-window", "close-unnecessary-selects"],
+  emits: ["close-menu-window", "close-unnecessary-selects", "open-page"],
 
   data() {
     return {
@@ -66,6 +66,8 @@ export default {
   width: 229px;
   background: #1c2734;
   padding: 31px 0 10px;
+  padding-left: calc(1vw - 20px);
+
   img {
     display: block;
     margin: 0 auto;
