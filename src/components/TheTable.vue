@@ -1,11 +1,13 @@
 <template>
   <TheExtraLine
+    v-if="width > 678"
     :save-change="saveChange"
     @on-save-change="onSaveChange"
     @save-change-active="saveChange = 'change'"
   />
 
   <v-data-table
+    v-if="width > 678"
     ref="table"
     :headers="showUpdateHeaders"
     :items="columns"
@@ -81,6 +83,8 @@
       </tr>
     </template>
   </v-data-table>
+
+  <TheTableMobile else :headers="showUpdateHeaders" :items="columns" />
 </template>
 
 <script>
@@ -91,6 +95,7 @@ import { VDataTable } from "vuetify/labs/VDataTable";
 import TheExtraLine from "./TheExtraLine.vue";
 import TheOptions from "./TheOptions.vue";
 import { saveTemplateSizeColumn, getDataTableHTML } from "@/lib/helpers";
+import TheTableMobile from "./TheTableMobile.vue";
 
 export default {
   name: "TheTable",
@@ -99,6 +104,7 @@ export default {
     BaseIcon,
     TheExtraLine,
     TheOptions,
+    TheTableMobile,
   },
 
   props: {
@@ -123,6 +129,8 @@ export default {
       columnsKey: 0,
       hideColumns: [],
       showUpdateHeaders: [],
+
+      width: 0,
     };
   },
 
@@ -205,18 +213,17 @@ export default {
   },
 
   mounted() {
+    this.updateWidth();
     this.columns = this.getProducts;
     this.headers = this.getHeaders;
     this.showUpdateHeaders =
       this.getValue("new_order_headers_cut") || this.getHeaders;
-
     setTimeout(() => {
       this.updateSizeColumn();
       this.getDataTableHTML(this);
     });
-
-    this.changeSortColumns();
-    this.changeSortHeaders();
+    // this.changeSortColumns();
+    // this.changeSortHeaders();
   },
 
   unmounted() {
@@ -339,6 +346,10 @@ export default {
       const { price, quantity } = this.columns.filter((el) => el.id === id)[0];
 
       return price * quantity;
+    },
+
+    updateWidth() {
+      this.width = window.innerWidth;
     },
   },
 };

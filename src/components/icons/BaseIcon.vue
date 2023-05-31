@@ -56,6 +56,7 @@ export default {
 
 <style scoped>
 .container__icon {
+  width: max-content;
   height: 30px;
   display: flex;
   align-items: center;
