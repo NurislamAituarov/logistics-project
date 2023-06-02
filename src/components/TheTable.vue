@@ -1,13 +1,13 @@
 <template>
   <TheExtraLine
-    v-if="width > 678"
+    v-if="getScreenWidth"
     :save-change="saveChange"
     @on-save-change="onSaveChange"
     @save-change-active="saveChange = 'change'"
   />
 
   <v-data-table
-    v-if="width > 678"
+    v-if="getScreenWidth"
     ref="table"
     :headers="showUpdateHeaders"
     :items="columns"
@@ -33,14 +33,16 @@
           ]"
           :data-order="header.key"
         >
-          <div class="headerHandle">{{ header.title }}</div>
+          <div class="headerHandle">
+            {{ header.title }}
+          </div>
         </th>
       </tr>
     </template>
 
     <template v-slot:item="{ item, index }">
       <tr :key="columnsKey">
-        <td class="d-flex justify-space-between align-center">
+        <td class="column-first mb-2">
           <BaseIcon
             class="combined-shape rowHandle"
             name="dragV2"
@@ -62,7 +64,7 @@
           :key="header.key"
         >
           <div
-            class="wrapper__column"
+            class="wrapper__column mb-2"
             :class="{ tbody__column: header.key === 'name' }"
           >
             {{
@@ -70,7 +72,6 @@
                 ? item.columns[header["key"]]
                 : calculateTotal(columns[index].id)
             }}
-
             <div
               v-if="header.key === 'name'"
               class="tbody__column-redirect"
@@ -160,6 +161,10 @@ export default {
       const screenHeight = window.innerHeight;
       return `${screenHeight - 400}px`; // Set the table height to 60% of the screen height
     },
+
+    getScreenWidth() {
+      return this.width > 678;
+    },
   },
 
   watch: {
@@ -236,7 +241,7 @@ export default {
       this.updateSizeColumn();
       this.getDataTableHTML(this);
     });
-    if (this.width > 678) {
+    if (this.getScreenWidth) {
       let table = document.querySelector("table tbody");
       const element = document.getElementById("sort_key");
 
@@ -356,6 +361,22 @@ td {
   border: none !important;
 }
 
+.column-first {
+  position: relative;
+  .rowHandle {
+    float: left;
+  }
+
+  .text-center {
+    float: right;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    right: 32px;
+    transform: translate(0%, -50%);
+  }
+}
+
 .v-data-table ::v-deep {
   table {
     overflow: visible !important;
@@ -373,13 +394,16 @@ td {
         letter-spacing: normal;
         color: black !important;
         background: white;
+
         .headerHandle {
-          // line-height: 46px;
+          // width: max-content;
           cursor: move;
           height: 80%;
-          cursor: move;
           display: flex;
           align-items: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -406,6 +430,9 @@ td {
   padding: 10px 15px;
   border: 1px solid#cccccc;
   border-radius: 5px;
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
 }
 
 .tbody__column {

@@ -86,8 +86,17 @@ export function getDataTableHTML(thisCopy) {
         if (curCol) {
           thisCopy.saveChange = 'change';
           let diffX = e.pageX - pageX;
+          // const str = curCol.children[0].innerHTML;
+
           if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + 'px';
           curCol.style.width = curColWidth + diffX + 'px';
+
+          // if (curCol.children[0].offsetWidth > curColWidth + diffX) {
+          //   const copyStr = str;
+          //   curCol.children[0].innerHTML = `${copyStr.substr(0, 7)}...`;
+          // } else {
+          //   curCol.children[0].innerHTML = str;
+          // }
         }
       });
 
