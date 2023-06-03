@@ -67,11 +67,15 @@
             class="wrapper__column mb-2"
             :class="{ tbody__column: header.key === 'name' }"
           >
-            {{
-              header.key !== "total"
-                ? item.columns[header["key"]]
-                : calculateTotal(columns[index].id)
-            }}
+            <TextTruncate
+              :text="
+                header.key !== 'total'
+                  ? item.columns[header['key']]
+                  : calculateTotal(columns[index].id)
+              "
+              :maxSymbols="50"
+            />
+            {{}}
             <div
               v-if="header.key === 'name'"
               class="tbody__column-redirect"
@@ -108,6 +112,7 @@ import {
   changeSortHeaders,
 } from "@/lib/helpers";
 import TheTableMobile from "./TheTableMobile.vue";
+import TextTruncate from "./base/global/TextTruncate.vue";
 
 export default {
   name: "TheTable",
@@ -117,6 +122,7 @@ export default {
     TheExtraLine,
     TheOptions,
     TheTableMobile,
+    TextTruncate,
   },
 
   props: {

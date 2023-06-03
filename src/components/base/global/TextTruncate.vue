@@ -1,33 +1,23 @@
 <template>
-  <BaseTooltip
-    v-if="preparedText.length > +currentMaxSymbols"
-    ref="activator"
-    :nudge-right="0"
-    triangle-side="center"
-    activator="hover"
-  >
-    <template #activator="{ attrs, on }">
-      <span v-bind="attrs" v-on="on">
-        {{ preparedText.slice(0, +currentMaxSymbols) }}...
-      </span>
-    </template>
-
-    {{ preparedText }}
-  </BaseTooltip>
+  <div v-if="preparedText.length > +currentMaxSymbols">
+    <v-tooltip :text="preparedText" location="bottom">
+      <template v-slot:activator="{ props }">
+        <div v-bind="props">
+          {{ preparedText.slice(0, +currentMaxSymbols) }}...
+        </div>
+      </template>
+    </v-tooltip>
+  </div>
   <span v-else ref="activator">
     {{ preparedText }}
   </span>
 </template>
 
 <script>
-import BaseTooltip from "@/components/base/baseTooltip";
-
 export default {
   name: "TextTruncate",
 
-  components: {
-    BaseTooltip,
-  },
+  components: {},
 
   props: {
     text: { type: [String, Number], default: null },
