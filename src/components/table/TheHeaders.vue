@@ -26,3 +26,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.column_action {
+  pointer-events: none;
+}
+</style>
