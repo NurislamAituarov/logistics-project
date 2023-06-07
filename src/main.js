@@ -4,9 +4,9 @@ import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import { loadFonts } from './plugins/webfontloader';
 import store from './store';
-import TheLoad from '@/pages/loadboard/TheLoad.vue';
-import TheBid from '@/pages/bid/About.vue';
-import MyLoad from '@/pages/my-load/my-load.vue';
+import TheLoad from '@/pages/loadboard/Load.vue';
+import TheBid from '@/pages/bid/Bid.vue';
+import MyLoad from '@/pages/my-load/MyLoad.vue';
 import './assets/styles/main.css';
 
 const router = createRouter({

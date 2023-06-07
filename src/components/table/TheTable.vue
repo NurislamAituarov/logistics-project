@@ -22,69 +22,21 @@
   >
     <template v-slot:headers="{ headers }">
       <tr id="sort_key">
-        <th
-          v-for="header of headers.flat()"
-          :key="header.key"
-          :class="[
-            'column sortable',
-            pagination.descending ? 'desc' : 'asc',
-            header.key === pagination.sortBy ? 'active' : '',
-            header.key === 'action' ? 'column_action' : '',
-          ]"
-          :data-order="header.key"
-        >
-          <div class="headerHandle">
-            {{ header.title }}
-          </div>
-        </th>
+        <TheTableHeadersTh :headers="headers" :pagination="pagination" />
       </tr>
     </template>
 
     <template v-slot:item="{ item, index }">
       <tr :key="columnsKey">
-        <td class="column-first mb-2">
-          <BaseIcon
-            class="combined-shape rowHandle"
-            name="dragV2"
-            width="20"
-            height="20"
-            color="#A6B7D4"
-          />
-          {{ index + 1 }}
-
-          <TheOptions
-            :idLine="columns[index].id"
-            @delete-line="deleteLine"
-            @open-dialog-window="$emit('open-dialog-window')"
-          />
-        </td>
-
-        <td
-          v-for="header of showUpdateHeaders.filter((el, i) => i !== 0)"
-          :key="header.key"
-        >
-          <div
-            class="wrapper__column mb-2"
-            :class="{ tbody__column: header.key === 'name' }"
-          >
-            <TextTruncate
-              :text="
-                header.key !== 'total'
-                  ? item.columns[header['key']]
-                  : calculateTotal(columns[index].id)
-              "
-              :maxSymbols="50"
-            />
-            {{}}
-            <div
-              v-if="header.key === 'name'"
-              class="tbody__column-redirect"
-              @click="openMyLoadPage(item.columns.name)"
-            >
-              <p class="right-arrow_2"></p>
-            </div>
-          </div>
-        </td>
+        <TheTableColumnsTh
+          :item="item"
+          :index="index"
+          :columns="columns"
+          :showUpdateHeaders="showUpdateHeaders"
+          @delete-line="deleteLine"
+          @open-dialog-window="$emit('open-dialog-window')"
+          @open-my-load-page="openMyLoadPage"
+        />
       </tr>
     </template>
   </v-data-table>
@@ -101,28 +53,27 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import BaseIcon from "@/components/icons/BaseIcon.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
-import TheExtraLine from "./TheExtraLine.vue";
-import TheOptions from "./TheOptions.vue";
+
+import TheExtraLine from "../TheExtraLine.vue";
+import TheTableMobile from "./TheTableMobile.vue";
+import TheTableHeadersTh from "./TheHeaders.vue";
+import TheTableColumnsTh from "./TheColumns.vue";
 import {
   saveTemplateSizeColumn,
   getDataTableHTML,
   changeSortColumns,
   changeSortHeaders,
 } from "@/lib/helpers";
-import TheTableMobile from "./TheTableMobile.vue";
-import TextTruncate from "./base/global/TextTruncate.vue";
 
 export default {
   name: "TheTable",
   components: {
     VDataTable,
-    BaseIcon,
     TheExtraLine,
-    TheOptions,
     TheTableMobile,
-    TextTruncate,
+    TheTableHeadersTh,
+    TheTableColumnsTh,
   },
 
   props: {
@@ -341,12 +292,6 @@ export default {
       this.setNewOrderLines(this.newOrderLines);
     },
 
-    calculateTotal(id) {
-      const { price, quantity } = this.columns.filter((el) => el.id === id)[0];
-
-      return price * quantity;
-    },
-
     updateWidth() {
       this.width = window.innerWidth;
     },
@@ -361,26 +306,6 @@ export default {
   border-radius: 0 0 10px 10px;
   border: 1px solid rgb(0, 0, 0, 0.12) !important;
   padding-bottom: 30px;
-}
-
-td {
-  border: none !important;
-}
-
-.column-first {
-  position: relative;
-  .rowHandle {
-    float: left;
-  }
-
-  .text-center {
-    float: right;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    right: 32px;
-    transform: translate(0%, -50%);
-  }
 }
 
 .v-data-table ::v-deep {
@@ -431,54 +356,6 @@ td {
   }
 }
 
-.wrapper__column {
-  position: relative;
-  padding: 10px 15px;
-  border: 1px solid#cccccc;
-  border-radius: 5px;
-  // white-space: nowrap;
-  // overflow: hidden;
-  // text-overflow: ellipsis;
-}
-
-.tbody__column {
-  font-family: MyriadPro;
-  font-size: 16px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  overflow: hidden;
-  padding-right: 25px;
-  color: black;
-}
-
-.tbody__column-redirect {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 21px;
-  height: 100%;
-  background-color: #f6f5f3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .right-arrow_2 {
-    border: 5px solid transparent;
-    display: inline-flex;
-    border-left: 5px solid gray;
-    border-right: none;
-  }
-}
-.tbody__column-redirect:hover {
-  cursor: pointer;
-}
-
-.setting_list {
-  width: max-content !important;
-}
-
 .v-table--fixed-header
   > .v-table__wrapper
   > table
@@ -489,24 +366,7 @@ td {
   border-bottom: 2px dashed #a6b7d4 !important;
 }
 
-.combined-shape {
-  cursor: pointer;
-}
-
 .v-data-table ::v-deep .v-data-table-footer {
   display: none;
-}
-
-.column_action {
-  pointer-events: none;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

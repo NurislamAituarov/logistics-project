@@ -1,30 +1,38 @@
 <template>
-  <div class="pl-10 mb-5 d-flex align-center container__title">
+  <div class="pl-15 mb-5 d-flex align-start container__title">
     <BaseIcon
       name="drag"
       width="20"
-      class="menu-burger"
+      class="mt-5 menu-burger"
       @click="openMenuWindow"
     />
-    <h1 class="pa-5">New Page</h1>
+    <h1 class="pa-2">Название: {{ item.name }}</h1>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "TheBid",
+  name: "MyLoad",
   components: { BaseIcon },
+
   data() {
     return {
-      itemsPerPage: 5,
+      item: "",
     };
   },
-  computed: {},
 
-  watch: {},
+  computed: {
+    ...mapGetters(["getProducts"]),
+  },
+
+  created() {
+    this.item = this.getProducts.filter(
+      (el) => el.id == this.$route.params.key.replace(/\D/g, "")
+    )[0];
+  },
 
   mounted() {},
 
@@ -38,8 +46,7 @@ export default {
 };
 </script>
 
-
-<style scoped lang="scss">
+<style scoped>
 .container__title {
   height: max-content;
   padding-left: 20px !important;
