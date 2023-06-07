@@ -61,8 +61,8 @@
 </template>
 
 <script>
-import TheOptions from "./TheOptions.vue";
-import BaseIcon from "./icons/BaseIcon.vue";
+import TheOptions from "../TheOptions.vue";
+import BaseIcon from "../icons/BaseIcon.vue";
 import { changeSortColumns } from "@/lib/helpers";
 
 export default {

@@ -54,7 +54,7 @@
 import { mapActions, mapGetters } from "vuex";
 import { VTouch } from "vuetify/lib/directives";
 import TheAddLine from "@/components/TheAddLine.vue";
-import TheTable from "@/components/TheTable.vue";
+import TheTable from "@/components/table/TheTable.vue";
 import TheDialogsWindow from "@/components/TheDialogsWindow.vue";
 import BaseIcon from "@/components/icons/BaseIcon.vue";
 
