@@ -207,14 +207,6 @@ export default {
     }
   },
 
-  unmounted() {
-    console.log("unmount");
-  },
-
-  updated() {
-    console.log("update");
-  },
-
   methods: {
     ...mapActions(["setValue", "setChangeColumns", "deletedLine"]),
 
