@@ -24,7 +24,7 @@
     <v-card-text class="pa-0 mt-5 card__container">
       <v-window v-model="tab">
         <v-window-item value="one" class="pa-6 pl-10 card__item">
-          One
+          Общие сведения о товаре
         </v-window-item>
 
         <v-window-item value="two" class="pa-6 pl-10 card__item">
@@ -37,7 +37,7 @@
         </v-window-item>
 
         <v-window-item value="three" class="pa-6 pl-10 card__item">
-          Three
+          Дополнительные рассходы при доставке
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -63,9 +63,9 @@ export default {
   data: () => ({
     tab: "two",
     itemTabs: [
-      { title: "Общее", tab: "Общие сведения о товаре" },
+      { title: "Общее", tab: "one" },
       { title: "Товар списания", tab: "two" },
-      { title: "Доп. расходы", tab: "Дополнительные рассходы при доставке" },
+      { title: "Доп. расходы", tab: "three" },
     ],
     page: "",
     saveTemplate: false,
