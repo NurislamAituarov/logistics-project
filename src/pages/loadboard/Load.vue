@@ -63,9 +63,9 @@ export default {
   data: () => ({
     tab: "two",
     itemTabs: [
-      { title: "Общее", tab: "one" },
+      { title: "Общее", tab: "Общие сведения о товаре" },
       { title: "Товар списания", tab: "two" },
-      { title: "Доп. расходы", tab: "three" },
+      { title: "Доп. расходы", tab: "Дополнительные рассходы при доставке" },
     ],
     page: "",
     saveTemplate: false,
