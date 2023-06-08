@@ -1,20 +1,21 @@
 <template>
-  <td class="column-first mb-2">
-    <BaseIcon
-      class="combined-shape rowHandle mr-1"
-      name="dragV2"
-      width="20"
-      height="20"
-      color="#A6B7D4"
-    />
-    {{ index + 1 }}
-
-    <TheOptions
-      class="ml-1"
-      :idLine="columns[index].id"
-      @delete-line="onDeleteLine"
-      @open-dialog-window="$emit('open-dialog-window')"
-    />
+  <td class="mb-2">
+    <div class="d-flex align-center justify-space-between">
+      <BaseIcon
+        class="combined-shape rowHandle mr-1"
+        name="dragV2"
+        width="20"
+        height="20"
+        color="#A6B7D4"
+      />
+      {{ index + 1 }}
+      <TheOptions
+        class="ml-1"
+        :idLine="columns[index].id"
+        @delete-line="onDeleteLine"
+        @open-dialog-window="$emit('open-dialog-window')"
+      />
+    </div>
   </td>
 
   <td
@@ -47,12 +48,11 @@
 
 <script>
 import TheOptions from "../TheOptions.vue";
-import TextTruncate from "../base/global/TextTruncate.vue";
 import BaseIcon from "../icons/BaseIcon.vue";
 
 export default {
   name: "TheTableColumnsTh",
-  components: { BaseIcon, TheOptions, TextTruncate },
+  components: { BaseIcon, TheOptions },
   props: {
     item: { type: Object, default: () => {} },
     index: { type: [Number, String], default: "" },
@@ -83,30 +83,11 @@ td {
   border: none !important;
 }
 
-.column-first {
-  position: relative;
-  .rowHandle {
-    float: left;
-  }
-
-  .text-center {
-    float: right;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    right: 32px;
-    transform: translate(0%, -50%);
-  }
-}
-
 .wrapper__column {
   position: relative;
   padding: 10px 15px;
   border: 1px solid#cccccc;
   border-radius: 5px;
-  // white-space: nowrap;
-  // overflow: hidden;
-  // text-overflow: ellipsis;
 }
 
 .tbody__column {
@@ -149,10 +130,6 @@ td {
 
 .combined-shape {
   cursor: pointer;
-}
-
-.column_action {
-  pointer-events: none;
 }
 
 .fade-enter-active,
