@@ -50,7 +50,7 @@
               <div
                 v-if="header.key === 'name'"
                 class="tbody__column-redirect"
-                @click="$emit('open-my-load-page', item.name)"
+                @click="$emit('open-my-load-page', items[index].id)"
               >
                 <p class="right-arrow_2"></p>
               </div>
