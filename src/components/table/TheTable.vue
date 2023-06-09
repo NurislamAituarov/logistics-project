@@ -281,6 +281,7 @@ export default {
     },
 
     openMyLoadPage(name) {
+      console.log(name);
       this.$router.push(`/my-load/:${name}`);
     },
 
