@@ -21,6 +21,7 @@
               item.title === 'Удалить' ? deleteLine(idLine) : editLine(idLine)
             "
             class="list__item-title"
+            :class="{ 'list__item-title-delete': item.title === 'Удалить' }"
             >{{ item.title }}</v-list-item-title
           >
         </v-list-item>
@@ -71,6 +72,12 @@ export default {
   cursor: pointer;
   &:hover {
     color: #1253a2;
+  }
+}
+.list__item-title-delete {
+  color: rgb(185, 0, 0);
+  &:hover {
+    color: red;
   }
 }
 </style>
