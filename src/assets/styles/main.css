@@ -10,6 +10,23 @@ svg {
   color: white;
 }
 
+.sortable-ghost {
+  opacity: 0.4;
+  transform: scale(0.98) !important;
+}
+.sortable-ghost td {
+  border-bottom: 2px dashed red !important;
+  border-top: 2px dashed red !important;
+}
+.sortable-ghost td:first-child {
+  border-left: 2px dashed red !important;
+  border-radius: 5px 0 0 5px;
+}
+.sortable-ghost td:last-child {
+  border-right: 2px dashed red !important;
+  border-radius: 0 5px 5px 0;
+}
+
 @media (max-width: 678px) {
   .container__title {
     padding-left: 10px !important;

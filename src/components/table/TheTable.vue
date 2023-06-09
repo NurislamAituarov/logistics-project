@@ -351,7 +351,8 @@ export default {
   }
 }
 
-.v-table--fixed-header
+.v-data-table
+  ::v-deep
   > .v-table__wrapper
   > table
   > thead

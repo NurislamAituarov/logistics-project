@@ -129,7 +129,7 @@ export default {
 
 <style scoped lang="scss">
 .data__table-wrapper {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 370px);
   overflow: scroll;
 }
 
