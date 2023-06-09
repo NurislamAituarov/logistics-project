@@ -72,12 +72,14 @@ export default {
   cursor: pointer;
   &:hover {
     color: #1253a2;
+    transition: 0.3s;
   }
 }
 .list__item-title-delete {
   color: rgb(185, 0, 0);
   &:hover {
     color: red;
+    transition: 0.3s;
   }
 }
 </style>
