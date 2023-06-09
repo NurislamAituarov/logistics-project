@@ -152,7 +152,7 @@ export function changeSortHeaders(element) {
   });
 }
 
-export function changeSortColumns(table) {
+export function changeSortColumns(table, saveChangeActive) {
   const _self = this;
   Sortable.create(table, {
     handle: '.rowHandle',
@@ -160,6 +160,7 @@ export function changeSortColumns(table) {
       const rowSelected = _self.columns.splice(oldIndex, 1)[0];
       _self.columns.splice(newIndex, 0, rowSelected);
       _self.saveChange = 'change';
+      saveChangeActive && saveChangeActive();
     },
     ghostClass: 'sortable-ghost',
   });

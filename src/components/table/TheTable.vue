@@ -1,9 +1,9 @@
 <template>
   <TheExtraLine
-    v-if="getScreenWidth"
+    :class="{ 'border-none': !getScreenWidth }"
     :save-change="saveChange"
     @on-save-change="onSaveChange"
-    @save-change-active="saveChange = 'change'"
+    @save-change-active="saveChangeActive"
   />
 
   <v-data-table
@@ -48,15 +48,8 @@
     @delete-line="deleteLine"
     @open-my-load-page="openMyLoadPage"
     @open-dialog-window="$emit('open-dialog-window')"
-  >
-    <TheExtraLine
-      v-if="!getScreenWidth"
-      class="border-none"
-      :save-change="saveChange"
-      @on-save-change="onSaveChange"
-      @save-change-active="saveChange = 'change'"
-    />
-  </TheTableMobile>
+    @save-change-active="saveChangeActive"
+  />
 </template>
 
 <script>
@@ -207,7 +200,6 @@ export default {
     if (this.getScreenWidth) {
       let table = document.querySelector("table tbody");
       const element = document.getElementById("sort_key");
-
       this.changeSortColumns(table);
       this.changeSortHeaders(element);
     }
@@ -293,6 +285,10 @@ export default {
 
     updateWidth() {
       this.width = window.innerWidth;
+    },
+
+    saveChangeActive() {
+      this.saveChange = "change";
     },
   },
 };

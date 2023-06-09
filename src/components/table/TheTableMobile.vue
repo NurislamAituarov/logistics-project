@@ -1,7 +1,5 @@
 <template>
   <div class="data__table-wrapper">
-    <slot />
-
     <div
       v-for="(item, index) of columns"
       :key="item.id"
@@ -82,7 +80,12 @@ export default {
     };
   },
 
-  emits: ["delete-line", "open-my-load-page", "open-dialog-window"],
+  emits: [
+    "delete-line",
+    "open-my-load-page",
+    "open-dialog-window",
+    "save-change-active",
+  ],
 
   watch: {
     items() {
@@ -92,7 +95,7 @@ export default {
 
   mounted() {
     let table = document.querySelector(".data__table-wrapper");
-    this.changeSortColumns(table);
+    this.changeSortColumns(table, this.saveChangeActive);
   },
 
   methods: {
@@ -114,6 +117,10 @@ export default {
 
     onDeleteLine(id) {
       this.$emit("delete-line", id);
+    },
+
+    saveChangeActive() {
+      this.$emit("save-change-active");
     },
   },
 };
