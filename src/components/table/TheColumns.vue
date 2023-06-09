@@ -23,7 +23,7 @@
     :key="header.key"
   >
     <div
-      class="wrapper__column mb-2"
+      class="wrapper__column mb-1 mt-1"
       :class="{ tbody__column: header.key === 'name' }"
     >
       <TextTruncate
