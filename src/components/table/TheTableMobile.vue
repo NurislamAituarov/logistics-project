@@ -1,5 +1,7 @@
 <template>
   <div class="data__table-wrapper">
+    <slot />
+
     <div
       v-for="(item, index) of columns"
       :key="item.id"

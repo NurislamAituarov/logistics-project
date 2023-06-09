@@ -48,7 +48,15 @@
     @delete-line="deleteLine"
     @open-my-load-page="openMyLoadPage"
     @open-dialog-window="$emit('open-dialog-window')"
-  />
+  >
+    <TheExtraLine
+      v-if="!getScreenWidth"
+      class="border-none"
+      :save-change="saveChange"
+      @on-save-change="onSaveChange"
+      @save-change-active="saveChange = 'change'"
+    />
+  </TheTableMobile>
 </template>
 
 <script>
@@ -134,9 +142,7 @@ export default {
     },
 
     saveTemplate(value) {
-      if (value) {
-        this.saveTemplateSizeColumn();
-      }
+      if (value) this.saveTemplateSizeColumn();
     },
 
     getHeaders(items) {
@@ -148,13 +154,11 @@ export default {
         this.newOrderHeaders = oldValue;
 
         newValue.forEach((el) => {
-          if (!el.show && !this.hideColumns.includes(el.key)) {
+          if (!el.show && !this.hideColumns.includes(el.key))
             this.hideColumns.push(el.key);
-          }
 
-          if (el.show && this.hideColumns.includes(el.key)) {
+          if (el.show && this.hideColumns.includes(el.key))
             this.hideColumns = [];
-          }
         });
         this.getDataTableHTML(this);
       },
@@ -194,10 +198,12 @@ export default {
     this.headers = this.getHeaders;
     this.showUpdateHeaders =
       this.getValue("new_order_headers_cut") || this.getHeaders;
+
     setTimeout(() => {
       this.updateSizeColumn();
       this.getDataTableHTML(this);
     });
+
     if (this.getScreenWidth) {
       let table = document.querySelector("table tbody");
       const element = document.getElementById("sort_key");
@@ -360,5 +366,9 @@ export default {
 
 .v-data-table ::v-deep .v-data-table-footer {
   display: none;
+}
+
+.border-none {
+  border: none;
 }
 </style>
