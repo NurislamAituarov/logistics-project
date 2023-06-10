@@ -130,15 +130,14 @@ export function getDataTableHTML(thisCopy) {
   }
 }
 
-export function changeSortHeaders(element) {
+export function changeSortHeaders(element, _self, extraSort) {
   this.$nextTick(() => {
-    const _self = this;
     Sortable.create(element, {
       handle: '.headerHandle',
       onEnd({ newIndex, oldIndex }) {
         const headerSelected = _self.showUpdateHeaders.splice(oldIndex, 1)[0];
         _self.showUpdateHeaders.splice(newIndex, 0, headerSelected);
-        _self.saveChange = 'change';
+        if (!extraSort) _self.saveChange = 'change';
       },
       ghostClass: 'sortable-ghost_header',
     });

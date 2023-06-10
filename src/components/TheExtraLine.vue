@@ -50,7 +50,10 @@
           </v-list-item>
         </v-list>
 
-        <v-list v-else class="setting_list-headers">
+        <v-list
+          v-if="activeItem === 'Отображение столбцов'"
+          class="setting_list-headers"
+        >
           <v-list-item v-for="(item, index) in headers" :key="index">
             <BaseCheckbox
               :label="item.title"
@@ -58,6 +61,25 @@
               :disabled="item.key === 'action' || item.key === 'total'"
               @input="onChange($event, item.key, index)"
             />
+          </v-list-item>
+        </v-list>
+
+        <v-list
+          v-if="activeItem === 'Порядок столбцов'"
+          class="setting_list-headers"
+        >
+          <v-list-item v-for="header in showUpdateHeaders" :key="header.key">
+            <BaseIcon
+              :class="{
+                disable: header.key === 'action' || header.key === 'total',
+              }"
+              class="combined-shape headerHandle mr-4"
+              name="dragV2"
+              width="20"
+              height="20"
+              color="#A6B7D4"
+            />
+            {{ header.title }}
           </v-list-item>
         </v-list>
       </v-menu>
@@ -70,6 +92,7 @@
 import { mapActions, mapGetters } from "vuex";
 import BaseIcon from "./icons/BaseIcon.vue";
 import BaseCheckbox from "./base/BaseChekbox.vue";
+import { changeSortHeaders } from "@/lib/helpers";
 
 export default {
   name: "TheExtraLine",
@@ -80,8 +103,10 @@ export default {
   props: {
     saveChange: { type: [Boolean, String], default: false },
   },
+
   data() {
     return {
+      showUpdateHeaders: [],
       headers: [],
       items: [{ title: "Отображение столбцов" }, { title: "Порядок столбцов" }],
       activeItem: "",
@@ -98,24 +123,46 @@ export default {
     getHeaders: {
       handler(items) {
         this.$emit("save-change-active");
-        this.headers = items;
+        this.showUpdateHeaders = items;
       },
+      deep: true,
+    },
+
+    activeItem(value) {
+      if (value === "Порядок столбцов") {
+        setTimeout(() => {
+          const element = document.querySelector(".setting_list-headers");
+          this.changeSortHeaders(element, this, "Порядок");
+        });
+      }
+    },
+
+    showUpdateHeaders: {
+      handler(headers) {
+        this.setValue({
+          name: "new_order_headers_cut",
+          value: headers,
+        });
+      },
+
       deep: true,
     },
   },
 
   computed: {
-    ...mapGetters(["getHeaders"]),
+    ...mapGetters(["getHeaders", "getValue"]),
   },
 
   mounted() {
     this.headers = this.getHeaders;
+    this.showUpdateHeaders =
+      this.getValue("new_order_headers_cut") || this.getHeaders;
   },
 
   updated() {},
 
   methods: {
-    ...mapActions(["setChangeDisabled"]),
+    ...mapActions(["setChangeDisabled", "setValue"]),
 
     onSelectedSetting(value) {
       this.animActive = value;
@@ -128,6 +175,8 @@ export default {
     onChange(e, key, index) {
       this.setChangeDisabled({ show: e.target.checked, key, index });
     },
+
+    changeSortHeaders,
   },
 };
 </script>
@@ -187,5 +236,10 @@ export default {
 .anim__icon-setting {
   transition: 1s;
   transform: rotateZ(360deg);
+}
+
+.disable {
+  opacity: 0.5;
+  pointer-events: none;
 }
 </style>
