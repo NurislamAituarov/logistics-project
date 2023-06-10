@@ -142,6 +142,7 @@ export default {
   width: 100%;
   min-height: 62px;
   margin-bottom: 10px;
+  transition: all 0.5s;
 }
 
 .wrapper__column {

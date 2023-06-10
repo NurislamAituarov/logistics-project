@@ -56,10 +56,12 @@ export function getDataTableHTML(thisCopy) {
       let div = createDiv(tableHeight);
       cols[i].appendChild(div);
       cols[i].style.position = 'relative';
-      setListeners(div);
+      setListeners(div, i);
     }
 
-    function setListeners(div) {
+    function setListeners(div, i) {
+      if (cols.length - 2 === i) div.style.pointerEvents = 'none';
+
       let pageX, curCol, nxtCol, curColWidth, nxtColWidth;
 
       div.addEventListener('mousedown', function (e) {
@@ -86,17 +88,8 @@ export function getDataTableHTML(thisCopy) {
         if (curCol) {
           thisCopy.saveChange = 'change';
           let diffX = e.pageX - pageX;
-          // const str = curCol.children[0].innerHTML;
-
           if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + 'px';
           curCol.style.width = curColWidth + diffX + 'px';
-
-          // if (curCol.children[0].offsetWidth > curColWidth + diffX) {
-          //   const copyStr = str;
-          //   curCol.children[0].innerHTML = `${copyStr.substr(0, 7)}...`;
-          // } else {
-          //   curCol.children[0].innerHTML = str;
-          // }
         }
       });
 
@@ -137,15 +130,14 @@ export function getDataTableHTML(thisCopy) {
   }
 }
 
-export function changeSortHeaders(element) {
+export function changeSortHeaders(element, _self, extraSort) {
   this.$nextTick(() => {
-    const _self = this;
     Sortable.create(element, {
       handle: '.headerHandle',
       onEnd({ newIndex, oldIndex }) {
         const headerSelected = _self.showUpdateHeaders.splice(oldIndex, 1)[0];
         _self.showUpdateHeaders.splice(newIndex, 0, headerSelected);
-        _self.saveChange = 'change';
+        if (!extraSort) _self.saveChange = 'change';
       },
       ghostClass: 'sortable-ghost_header',
     });

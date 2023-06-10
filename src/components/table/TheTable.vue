@@ -201,7 +201,7 @@ export default {
       let table = document.querySelector("table tbody");
       const element = document.getElementById("sort_key");
       this.changeSortColumns(table);
-      this.changeSortHeaders(element);
+      this.changeSortHeaders(element, this);
     }
   },
 
@@ -273,7 +273,6 @@ export default {
     },
 
     openMyLoadPage(name) {
-      console.log(name);
       this.$router.push(`/my-load/:${name}`);
     },
 
@@ -368,5 +367,13 @@ export default {
 
 .border-none {
   border: none;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
 }
 </style>
