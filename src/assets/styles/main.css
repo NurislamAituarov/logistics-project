@@ -27,6 +27,12 @@ svg {
   border-radius: 0 5px 5px 0;
 }
 
+.sortable-ghost.data__table-mobile {
+  border: 2px dashed red !important;
+  opacity: 0.4 !important;
+  transform: scale(0.9) !important;
+}
+
 @media (max-width: 678px) {
   .container__title {
     padding-left: 10px !important;

@@ -53,7 +53,6 @@
         <TheExtraLineMenuColumnDisplay
           :headers="headers"
           :activeItem="activeItem"
-          @on-change="onChange"
         />
 
         <TheExtraLineMenuColumnOrder
