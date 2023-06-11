@@ -56,7 +56,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { VDataTable } from "vuetify/labs/VDataTable";
 
-import TheExtraLine from "../TheExtraLine.vue";
+import TheExtraLine from "../extra-line/TheExtraLine.vue";
 import TheTableMobile from "./TheTableMobile.vue";
 import TheTableHeadersTh from "./TheHeaders.vue";
 import TheTableColumnsTh from "./TheColumns.vue";

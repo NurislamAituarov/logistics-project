@@ -50,38 +50,16 @@
           </v-list-item>
         </v-list>
 
-        <v-list
-          v-if="activeItem === 'Отображение столбцов'"
-          class="setting_list-headers"
-        >
-          <v-list-item v-for="(item, index) in headers" :key="index">
-            <BaseCheckbox
-              :label="item.title"
-              :value="item.show"
-              :disabled="item.key === 'action' || item.key === 'total'"
-              @input="onChange($event, item.key, index)"
-            />
-          </v-list-item>
-        </v-list>
+        <TheExtraLineMenuColumnDisplay
+          :headers="headers"
+          :activeItem="activeItem"
+          @on-change="onChange"
+        />
 
-        <v-list
-          v-if="activeItem === 'Порядок столбцов'"
-          class="setting_list-headers"
-        >
-          <v-list-item v-for="header in showUpdateHeaders" :key="header.key">
-            <BaseIcon
-              :class="{
-                disable: header.key === 'action' || header.key === 'total',
-              }"
-              class="combined-shape headerHandle mr-4"
-              name="dragV2"
-              width="20"
-              height="20"
-              color="#A6B7D4"
-            />
-            {{ header.title }}
-          </v-list-item>
-        </v-list>
+        <TheExtraLineMenuColumnOrder
+          :showUpdateHeaders="showUpdateHeaders"
+          :activeItem="activeItem"
+        />
       </v-menu>
     </div>
   </div>
@@ -90,15 +68,17 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import BaseIcon from "./icons/BaseIcon.vue";
-import BaseCheckbox from "./base/BaseChekbox.vue";
+import BaseIcon from "../icons/BaseIcon.vue";
 import { changeSortHeaders } from "@/lib/helpers";
+import TheExtraLineMenuColumnDisplay from "./TheExtraLineMenuColumnDisplay.vue";
+import TheExtraLineMenuColumnOrder from "./TheExtraLineMenuColumnOrder.vue";
 
 export default {
   name: "TheExtraLine",
   components: {
-    BaseCheckbox,
     BaseIcon,
+    TheExtraLineMenuColumnDisplay,
+    TheExtraLineMenuColumnOrder,
   },
   props: {
     saveChange: { type: [Boolean, String], default: false },
@@ -123,13 +103,15 @@ export default {
     getHeaders: {
       handler(items) {
         this.$emit("save-change-active");
-        this.showUpdateHeaders = items;
+        this.headers = items;
       },
       deep: true,
     },
 
     activeItem(value) {
       if (value === "Порядок столбцов") {
+        this.showUpdateHeaders = this.getValue("new_order_headers_cut");
+
         setTimeout(() => {
           const element = document.querySelector(".setting_list-headers");
           this.changeSortHeaders(element, this, "Порядок");
@@ -162,7 +144,7 @@ export default {
   updated() {},
 
   methods: {
-    ...mapActions(["setChangeDisabled", "setValue"]),
+    ...mapActions(["setValue"]),
 
     onSelectedSetting(value) {
       this.animActive = value;
@@ -172,19 +154,10 @@ export default {
       }, 300);
     },
 
-    onChange(e, key, index) {
-      this.setChangeDisabled({ show: e.target.checked, key, index });
-    },
-
     changeSortHeaders,
   },
 };
 </script>
-
-
-
-
-
 
 <style scoped lang="scss">
 .v-list-item ::v-deep div {
@@ -224,10 +197,6 @@ export default {
   }
 }
 
-.setting_list-headers {
-  width: 210px;
-}
-
 .anim__icon {
   transition: 0.5s;
   transform: translateX(8px);
@@ -236,10 +205,5 @@ export default {
 .anim__icon-setting {
   transition: 1s;
   transform: rotateZ(360deg);
-}
-
-.disable {
-  opacity: 0.5;
-  pointer-events: none;
 }
 </style>
