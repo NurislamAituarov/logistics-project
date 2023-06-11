@@ -123,13 +123,15 @@ export default {
     getHeaders: {
       handler(items) {
         this.$emit("save-change-active");
-        this.showUpdateHeaders = items;
+        this.headers = items;
       },
       deep: true,
     },
 
     activeItem(value) {
       if (value === "Порядок столбцов") {
+        this.showUpdateHeaders = this.getValue("new_order_headers_cut");
+
         setTimeout(() => {
           const element = document.querySelector(".setting_list-headers");
           this.changeSortHeaders(element, this, "Порядок");
@@ -241,5 +243,11 @@ export default {
 .disable {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.setting_list-headers::v-deep .sortable-ghost_header {
+  opacity: 0.5;
+  border: 2px dashed #a6b7d4 !important;
+  border-radius: 5px;
 }
 </style>
