@@ -1,11 +1,11 @@
 import { createStore } from 'vuex';
-import module from './modules';
-import columnSize from './storage';
+import mainState from './main-state';
+import storage from './storage';
 
 const store = createStore({
   modules: {
-    module,
-    columnSize,
+    mainState,
+    storage,
   },
 });
 
