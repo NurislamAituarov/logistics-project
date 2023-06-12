@@ -58,9 +58,9 @@ export default {
     color: #ffffff !important;
   }
 
-  &.black {
-    background-color: black !important;
-    border-color: black !important;
+  &.darkBlue {
+    background-color: #1253a2 !important;
+    border-color: #1253a2 !important;
     color: #ffffff !important;
   }
   &.text {
