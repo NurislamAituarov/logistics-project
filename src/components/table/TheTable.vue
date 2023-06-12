@@ -55,7 +55,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { VDataTable } from "vuetify/labs/VDataTable";
-
 import TheExtraLine from "../extra-line/TheExtraLine.vue";
 import TheTableMobile from "./TheTableMobile.vue";
 import TheTableHeadersTh from "./TheHeaders.vue";
@@ -177,6 +176,13 @@ export default {
           this.columnsKey += 1;
           this.newOrderLines = newValue;
         }
+      },
+      deep: true,
+    },
+
+    showUpdateHeaders: {
+      handler() {
+        this.getDataTableHTML(this);
       },
       deep: true,
     },

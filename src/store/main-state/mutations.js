@@ -1,5 +1,5 @@
 export const mutations = {
-  createColumn(state, productItem) {
+  createLoadLine(state, productItem) {
     state.products.push(productItem);
   },
   setChangeColumns(state, active) {

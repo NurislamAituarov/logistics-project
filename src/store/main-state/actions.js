@@ -1,6 +1,6 @@
 export const actions = {
-  fetchColumn({ commit }, productItem) {
-    commit('createColumn', productItem);
+  addLoadLine({ commit }, productItem) {
+    commit('createLoadLine', productItem);
   },
 
   setChangeColumns({ commit }, active) {

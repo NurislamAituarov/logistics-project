@@ -27,6 +27,7 @@ export function saveTemplateSizeColumn() {
 }
 
 export function getDataTableHTML(thisCopy) {
+  console.log('render');
   let tables = document.getElementsByTagName('table');
 
   for (let i = 0; i < tables.length; i++) {

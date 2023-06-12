@@ -89,7 +89,7 @@ export default {
 
   methods: {
     ...mapActions([
-      "fetchColumn",
+      "addLoadLine",
       "setChangeColumns",
       "setValue",
       "setMenuWindow",
@@ -99,14 +99,13 @@ export default {
       const current_date = new Date();
       const id = Math.floor(current_date.getTime() / 1000);
 
-      this.fetchColumn({
-        one: "",
+      this.addLoadLine({
         action: "",
-        name: "Мраморный",
+        name: "Тестовое наименование еденицы",
         newCol: "Тестовое поле ",
         price: 0,
         quantity: 0,
-        product: "Тестовое название",
+        product: "Тестовое название товара",
         total: "0000",
         id,
       });
