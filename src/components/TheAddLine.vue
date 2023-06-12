@@ -1,6 +1,6 @@
 <template>
   <div class="block__add">
-    <BaseBtn color="black" height="40" width="207" @click="onAddLoad">
+    <BaseBtn color="darkBlue" height="40" width="207" @click="onAddLoad">
       <template v-if="!loading">
         <BaseIcon name="plus" width="13px" color="white" />
         Добавить строку
