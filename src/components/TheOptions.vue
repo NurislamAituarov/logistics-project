@@ -31,9 +31,9 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { mergeProps } from "vue";
 import BaseIcon from "./icons/BaseIcon.vue";
-import { mapActions } from "vuex";
 
 export default {
   name: "TheOptions",

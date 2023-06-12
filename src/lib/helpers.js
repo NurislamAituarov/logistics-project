@@ -27,6 +27,7 @@ export function saveTemplateSizeColumn() {
 }
 
 export function getDataTableHTML(thisCopy) {
+  console.log('render');
   let tables = document.getElementsByTagName('table');
 
   for (let i = 0; i < tables.length; i++) {
@@ -144,16 +145,17 @@ export function changeSortHeaders(element, _self, extraSort) {
   });
 }
 
-export function changeSortColumns(table, saveChangeActive) {
-  const _self = this;
-  Sortable.create(table, {
-    handle: '.rowHandle',
-    onEnd({ newIndex, oldIndex }) {
-      const rowSelected = _self.columns.splice(oldIndex, 1)[0];
-      _self.columns.splice(newIndex, 0, rowSelected);
-      _self.saveChange = 'change';
-      saveChangeActive && saveChangeActive();
-    },
-    ghostClass: 'sortable-ghost',
+export function changeSortColumns(table, _self, saveChangeActive) {
+  this.$nextTick(() => {
+    Sortable.create(table, {
+      handle: '.rowHandle',
+      onEnd({ newIndex, oldIndex }) {
+        const rowSelected = _self.columns.splice(oldIndex, 1)[0];
+        _self.columns.splice(newIndex, 0, rowSelected);
+        if (_self.saveChange !== undefined) _self.saveChange = 'change';
+        saveChangeActive && saveChangeActive();
+      },
+      ghostClass: 'sortable-ghost',
+    });
   });
 }

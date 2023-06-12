@@ -1,10 +1,13 @@
 <template>
   <v-list v-if="activeItem === 'Порядок столбцов'" class="setting_list-headers">
-    <v-list-item v-for="header in showUpdateHeaders" :key="header.key">
+    <v-list-item
+      v-for="header in showUpdateHeaders"
+      :key="header.key"
+      :class="{
+        disable: header.key === 'action' || header.key === 'total',
+      }"
+    >
       <BaseIcon
-        :class="{
-          disable: header.key === 'action' || header.key === 'total',
-        }"
         class="combined-shape headerHandle mr-4"
         name="dragV2"
         width="20"

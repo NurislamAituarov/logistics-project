@@ -120,10 +120,12 @@ export default {
 
     showUpdateHeaders: {
       handler(headers) {
-        this.setValue({
-          name: "new_order_headers_cut",
-          value: headers,
-        });
+        if (this.activeItem === "Порядок столбцов") {
+          this.setValue({
+            name: "new_order_headers_cut",
+            value: headers,
+          });
+        }
       },
 
       deep: true,

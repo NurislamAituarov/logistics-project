@@ -55,7 +55,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { VDataTable } from "vuetify/labs/VDataTable";
-
 import TheExtraLine from "../extra-line/TheExtraLine.vue";
 import TheTableMobile from "./TheTableMobile.vue";
 import TheTableHeadersTh from "./TheHeaders.vue";
@@ -180,6 +179,13 @@ export default {
       },
       deep: true,
     },
+
+    showUpdateHeaders: {
+      handler() {
+        this.getDataTableHTML(this);
+      },
+      deep: true,
+    },
   },
 
   created() {
@@ -200,7 +206,7 @@ export default {
     if (this.getScreenWidth) {
       let table = document.querySelector("table tbody");
       const element = document.getElementById("sort_key");
-      this.changeSortColumns(table);
+      this.changeSortColumns(table, this);
       this.changeSortHeaders(element, this);
     }
   },
