@@ -95,7 +95,7 @@ export default {
 
   mounted() {
     let table = document.querySelector(".data__table-wrapper");
-    this.changeSortColumns(table, this.saveChangeActive);
+    this.changeSortColumns(table, this, this.saveChangeActive);
   },
 
   methods: {

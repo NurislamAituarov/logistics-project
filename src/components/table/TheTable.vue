@@ -200,7 +200,7 @@ export default {
     if (this.getScreenWidth) {
       let table = document.querySelector("table tbody");
       const element = document.getElementById("sort_key");
-      this.changeSortColumns(table);
+      this.changeSortColumns(table, this);
       this.changeSortHeaders(element, this);
     }
   },
