@@ -68,6 +68,7 @@ import {
 
 export default {
   name: "TheTable",
+
   components: {
     VDataTable,
     TheExtraLine,

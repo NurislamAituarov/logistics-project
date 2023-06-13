@@ -8,7 +8,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import TheLeftColumn from "./TheLeftColumn.vue";
+import TheLeftColumn from "../components/TheLeftColumn.vue";
 
 export default {
   components: {

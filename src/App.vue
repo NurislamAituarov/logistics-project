@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import TheMain from "./components/TheMain.vue";
+import TheMain from "./layouts/TheMain.vue";
 
 export default {
   name: "App",
