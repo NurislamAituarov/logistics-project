@@ -18,49 +18,40 @@
     </div>
   </td>
 
-  <td
-    v-for="header of showUpdateHeaders.filter((el, i) => i !== 0)"
-    :key="header.key"
-  >
+  <td v-for="header of showUpdateHeaders.filter((el, i) => i !== 0)" :key="header.key">
     <div
       class="wrapper__column mb-1 mt-1"
       :class="{ tbody__column: header.key === 'name' }"
+      @click="$emit('open-my-load-page', columns[index].id)"
     >
       <TextTruncate
         :text="
-          header.key !== 'total'
-            ? item.columns[header['key']]
-            : calculateTotal(columns[index].id)
+          header.key !== 'total' ? item.columns[header['key']] : calculateTotal(columns[index].id)
         "
         :maxSymbols="50"
       />
-      <div
-        v-if="header.key === 'name'"
-        class="tbody__column-redirect"
-        @click="$emit('open-my-load-page', columns[index].id)"
-      >
+      <div v-if="header.key === 'name'" class="tbody__column-redirect">
         <p class="right-arrow_2"></p>
       </div>
     </div>
   </td>
 </template>
 
-
 <script>
-import TheOptions from "../TheOptions.vue";
-import BaseIcon from "../icons/BaseIcon.vue";
+import TheOptions from '../TheOptions.vue';
+import BaseIcon from '../icons/BaseIcon.vue';
 
 export default {
-  name: "TheTableColumnsTh",
+  name: 'TheTableColumnsTh',
   components: { BaseIcon, TheOptions },
   props: {
     item: { type: Object, default: () => {} },
-    index: { type: [Number, String], default: "" },
+    index: { type: [Number, String], default: '' },
     columns: { type: Array, default: () => [] },
     showUpdateHeaders: { type: Array, default: () => [] },
   },
 
-  emits: ["delete-line", "open-dialog-window", "open-my-load-page"],
+  emits: ['delete-line', 'open-dialog-window', 'open-my-load-page'],
 
   methods: {
     calculateTotal(id) {
@@ -70,13 +61,11 @@ export default {
     },
 
     onDeleteLine(id) {
-      this.$emit("delete-line", id);
+      this.$emit('delete-line', id);
     },
   },
 };
 </script>
-
-
 
 <style scoped lang="scss">
 td {
@@ -101,6 +90,11 @@ td {
   overflow: hidden;
   padding-right: 25px;
   color: black;
+  transition: all 0.4s;
+  &:hover {
+    background-color: #f6f5f3;
+    cursor: pointer;
+  }
 }
 
 .tbody__column-redirect {
@@ -119,9 +113,6 @@ td {
     border-left: 5px solid gray;
     border-right: none;
   }
-}
-.tbody__column-redirect:hover {
-  cursor: pointer;
 }
 
 .setting_list {

@@ -11,18 +11,16 @@
               v-bind="mergeProps(menu, tooltip)"
             />
           </template>
-          <span>Настройка строки, удалить, изменить </span>
+          <span>Настройка строки </span>
         </v-tooltip>
       </template>
       <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index">
+        <v-list-item v-for="(element, index) in actionElements" :key="index" class="list__item">
           <v-list-item-title
-            @click="
-              item.title === 'Удалить' ? deleteLine(idLine) : editLine(idLine)
-            "
+            @click="element.title === 'Удалить' ? deleteLine(idLine) : editLine(idLine)"
             class="list__item-title"
-            :class="{ 'list__item-title-delete': item.title === 'Удалить' }"
-            >{{ item.title }}</v-list-item-title
+            :class="{ 'list__item-title-delete': element.title === 'Удалить' }"
+            >{{ element.title }}</v-list-item-title
           >
         </v-list-item>
       </v-list>
@@ -31,36 +29,36 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import { mergeProps } from "vue";
-import BaseIcon from "./icons/BaseIcon.vue";
+import { mapActions } from 'vuex';
+import { mergeProps } from 'vue';
+import BaseIcon from './icons/BaseIcon.vue';
 
 export default {
-  name: "TheOptions",
+  name: 'TheOptions',
 
   components: { BaseIcon },
 
   props: {
-    idLine: { type: [String, Number], default: "" },
+    idLine: { type: [String, Number], default: '' },
     itemLine: { type: Object, default: () => {} },
   },
 
   data: () => ({
-    items: [{ title: "Удалить" }, { title: "Изменить" }],
+    actionElements: [{ title: 'Удалить' }, { title: 'Изменить' }],
   }),
 
   watch: {},
 
   methods: {
-    ...mapActions(["setEditLine"]),
+    ...mapActions(['setEditLine']),
     mergeProps,
 
     deleteLine(id) {
-      this.$emit("delete-line", id);
+      this.$emit('delete-line', id);
     },
 
     editLine(id) {
-      this.$emit("open-dialog-window");
+      this.$emit('open-dialog-window');
       this.setEditLine(id);
     },
   },
@@ -68,6 +66,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.list__item {
+  min-height: auto !important;
+}
 .list__item-title {
   cursor: pointer;
   &:hover {

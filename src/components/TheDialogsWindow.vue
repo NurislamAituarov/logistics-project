@@ -1,8 +1,8 @@
 <template>
   <v-dialog class="modal" v-model="dialog" persistent width="800">
     <v-card>
-      <v-card-title class="modal__title">
-        <span class="text-h5">Изменить данные строки</span>
+      <v-card-title class="modal__title pt-5">
+        <span class="text-h5 font-weight-bold">Изменить данные строки</span>
       </v-card-title>
       <v-card-text class="modal__content">
         <v-container>
