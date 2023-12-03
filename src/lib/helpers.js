@@ -1,8 +1,7 @@
 import Sortable from 'sortablejs';
 
+const tables = document.getElementsByTagName('table');
 export function saveTemplateSizeColumn() {
-  const tables = document.getElementsByTagName('table');
-
   Array.from(tables).forEach((table) => {
     resizableGrid(table);
   });
@@ -27,8 +26,6 @@ export function saveTemplateSizeColumn() {
 }
 
 export function getDataTableHTML(thisCopy) {
-  let tables = document.getElementsByTagName('table');
-
   for (let i = 0; i < tables.length; i++) {
     resizableGrid(tables[i]);
   }
@@ -84,7 +81,6 @@ export function getDataTableHTML(thisCopy) {
       });
 
       row.addEventListener('mousemove', function (e) {
-        console.log('move');
         if (curCol) {
           thisCopy.saveChange = 'change';
           let diffX = e.pageX - pageX;
@@ -157,4 +153,34 @@ export function changeSortColumns(table, _self, saveChangeActive) {
       ghostClass: 'sortable-ghost',
     });
   });
+}
+
+export function updateSizeColumn() {
+  const columnValues = {
+    action: this.getValue('size_column_action'),
+    name: this.getValue('size_column_name'),
+    price: this.getValue('size_column_price'),
+    quantity: this.getValue('size_column_quantity'),
+    product: this.getValue('size_column_product'),
+    total: this.getValue('size_column_total'),
+    newCol: this.getValue('size_column_newCol'),
+  };
+
+  Array.from(tables).forEach((table) => {
+    resizableGrid(table);
+  });
+
+  function resizableGrid(table) {
+    const row = table.querySelector('tr');
+    const cols = row ? Array.from(row.children) : [];
+
+    cols.forEach((col) => {
+      const orderName = col.getAttribute('data-order');
+      const columnValue = columnValues[orderName];
+
+      if (columnValue) {
+        col.style.width = `${columnValue}`;
+      }
+    });
+  }
 }
