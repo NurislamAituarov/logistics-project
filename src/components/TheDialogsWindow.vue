@@ -1,10 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="800">
+  <v-dialog class="modal" v-model="dialog" persistent width="800">
     <v-card>
-      <v-card-title>
+      <v-card-title class="modal__title">
         <span class="text-h5">Изменить данные строки</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text class="modal__content">
         <v-container>
           <v-row>
             <v-col cols="12">
@@ -59,9 +59,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-darken-1" variant="text" @click="closeDialogsWindow">
-          Закрыть
-        </v-btn>
+        <v-btn color="blue-darken-1" variant="text" @click="closeDialogsWindow"> Закрыть </v-btn>
         <v-btn
           color="blue-darken-1"
           :disabled="!itemEdit.price || !itemEdit.quantity"
@@ -76,9 +74,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
 export default {
-  name: "TheDialogsWindow",
+  name: 'TheDialogsWindow',
 
   props: {
     dialogActive: { type: Boolean, default: false },
@@ -88,14 +86,13 @@ export default {
     dialog: false,
     itemEdit: {},
     rules: {
-      required: (value) => !!value || "Поле, обязательное для заполнения",
-      number: (v) =>
-        /^\d+$/.test(v) || "Поле должно содержать числовое значение",
+      required: (value) => !!value || 'Поле, обязательное для заполнения',
+      number: (v) => /^\d+$/.test(v) || 'Поле должно содержать числовое значение',
     },
   }),
 
   computed: {
-    ...mapGetters(["getEditLine"]),
+    ...mapGetters(['getEditLine']),
   },
 
   watch: {
@@ -110,19 +107,37 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setSaveLineEdit"]),
+    ...mapActions(['setSaveLineEdit']),
 
     closeDialogsWindow() {
       this.dialog = false;
-      this.$emit("close-dialog-window");
+      this.$emit('close-dialog-window');
       this.itemEdit = {};
     },
 
     saveLineEdit() {
       this.dialog = false;
       this.setSaveLineEdit({ data: this.itemEdit, id: this.itemEdit.id });
-      this.$emit("close-dialog-window", "save");
+      this.$emit('close-dialog-window', 'save');
     },
   },
 };
 </script>
+
+<style scoped lang="scss">
+@media all and (max-width: 768px) {
+  .modal ::v-deep .v-overlay__content {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+
+  .modal__title {
+    margin-top: 20px !important;
+  }
+  .modal__content {
+    padding: 0 !important;
+  }
+}
+</style>
