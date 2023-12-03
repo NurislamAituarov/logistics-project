@@ -1,12 +1,7 @@
 <template>
   <v-card class="right__column">
     <div class="pl-10 mb-5 d-flex align-start container__title">
-      <BaseIcon
-        name="drag"
-        width="20"
-        class="mt-2 menu-burger"
-        @click="openMenuWindow"
-      />
+      <BaseIcon name="drag" width="20" class="mt-2 menu-burger" @click="openMenuWindow" />
       <h1>Проведение ТО и мелкий ремонт</h1>
     </div>
 
@@ -43,31 +38,27 @@
     </v-card-text>
   </v-card>
 
-  <TheDialogsWindow
-    :dialog-active="dialog"
-    @close-dialog-window="closeDialogWindow"
-  />
+  <TheDialogsWindow :dialog-active="dialog" @close-dialog-window="closeDialogWindow" />
 </template>
 
-
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { VTouch } from "vuetify/lib/directives";
-import TheAddLine from "@/components/TheAddLine.vue";
-import TheTable from "@/components/table/TheTable.vue";
-import TheDialogsWindow from "@/components/TheDialogsWindow.vue";
-import BaseIcon from "@/components/icons/BaseIcon.vue";
+import { mapActions, mapGetters } from 'vuex';
+import { VTouch } from 'vuetify/lib/directives';
+import TheAddLine from '@/components/TheAddLine.vue';
+import TheTable from '@/components/table/TheTable.vue';
+import TheDialogsWindow from '@/components/TheDialogsWindow.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 export default {
-  name: "TheLoad",
+  name: 'TheLoad',
   data: () => ({
-    tab: "two",
+    tab: 'two',
     itemTabs: [
-      { title: "Общее", tab: "one" },
-      { title: "Товар списания", tab: "two" },
-      { title: "Доп. расходы", tab: "three" },
+      { title: 'Общее', tab: 'one' },
+      { title: 'Товар списания', tab: 'two' },
+      { title: 'Доп. расходы', tab: 'three' },
     ],
-    page: "",
+    page: '',
     saveTemplate: false,
     dialog: false,
     menuWindowActive: false,
@@ -78,7 +69,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getProducts", "getMenuWindow"]),
+    ...mapGetters(['getProducts', 'getMenuWindow']),
   },
 
   watch: {
@@ -88,29 +79,24 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      "addLoadLine",
-      "setChangeColumns",
-      "setValue",
-      "setMenuWindow",
-    ]),
+    ...mapActions(['addLoadLine', 'setChangeColumns', 'setValue', 'setMenuWindow']),
 
     addLoad() {
       const current_date = new Date();
       const id = Math.floor(current_date.getTime() / 1000);
 
       this.addLoadLine({
-        action: "",
-        name: "Тестовое наименование еденицы",
-        newCol: "Тестовое поле ",
+        action: '',
+        name: 'Тестовое наименование еденицы',
+        newCol: 'Тестовое поле ',
         price: 0,
         quantity: 0,
-        product: "Тестовое название товара",
-        total: "0000",
+        product: 'Тестовое название товара',
+        total: '0000',
         id,
       });
 
-      this.setValue({ name: "new_order_lines", value: this.getProducts });
+      this.setValue({ name: 'new_order_lines', value: this.getProducts });
     },
 
     openPage(page) {
@@ -130,8 +116,7 @@ export default {
 
     closeDialogWindow(save) {
       this.dialog = false;
-      save &&
-        this.setValue({ name: "new_order_lines", value: this.getProducts });
+      save && this.setValue({ name: 'new_order_lines', value: this.getProducts });
     },
 
     capitalizeFirstLetter(title) {
@@ -143,8 +128,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped lang="scss">
 h1 {
@@ -194,6 +177,11 @@ h1 {
 
   .card__item {
     padding: 10px !important;
+  }
+}
+@media (max-width: 425px) {
+  .tab {
+    min-width: 80px;
   }
 }
 </style>

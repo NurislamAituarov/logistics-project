@@ -6,24 +6,18 @@
         Добавить строку
       </template>
       <template v-else>
-        <v-progress-circular
-          indeterminate
-          color="white"
-          size="20"
-          :width="3"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate color="white" size="20" :width="3"></v-progress-circular>
       </template>
     </BaseBtn>
   </div>
 </template>
 
-
 <script>
-import BaseIcon from "./icons/BaseIcon.vue";
-import BaseBtn from "./base/BaseBtn.vue";
+import BaseIcon from './icons/BaseIcon.vue';
+import BaseBtn from './base/BaseBtn.vue';
 
 export default {
-  name: "TheAddLine",
+  name: 'TheAddLine',
 
   components: {
     BaseIcon,
@@ -41,14 +35,13 @@ export default {
       this.loading = true;
 
       setTimeout(() => {
-        this.$emit("add-load");
+        this.$emit('add-load');
         this.loading = false;
       }, 1000);
     },
   },
 };
 </script>
-
 
 <style scoped lang="scss">
 .block__add {
@@ -60,6 +53,13 @@ export default {
 .block__add .v-btn__content {
   div {
     margin-right: 10px;
+  }
+}
+
+@media all and (max-width: 425px) {
+  .block__add {
+    padding: 10px;
+    margin-bottom: 10px;
   }
 }
 </style>
