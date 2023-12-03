@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: "TheTableHeadersTh",
+  name: 'TheTableHeadersTh',
 
   props: {
     headers: { type: Array, default: () => [] },
@@ -30,5 +30,6 @@ export default {
 <style scoped>
 .column_action {
   pointer-events: none;
+  width: 100px;
 }
 </style>

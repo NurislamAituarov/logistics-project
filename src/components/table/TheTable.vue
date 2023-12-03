@@ -53,21 +53,23 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { VDataTable } from "vuetify/labs/VDataTable";
-import TheExtraLine from "../extra-line/TheExtraLine.vue";
-import TheTableMobile from "./TheTableMobile.vue";
-import TheTableHeadersTh from "./TheHeaders.vue";
-import TheTableColumnsTh from "./TheColumns.vue";
+import { mapGetters, mapActions } from 'vuex';
+import { VDataTable } from 'vuetify/labs/VDataTable';
+
+import TheExtraLine from '../extra-line/TheExtraLine.vue';
+import TheTableMobile from './TheTableMobile.vue';
+import TheTableHeadersTh from './TheHeaders.vue';
+import TheTableColumnsTh from './TheColumns.vue';
 import {
   saveTemplateSizeColumn,
   getDataTableHTML,
   changeSortColumns,
   changeSortHeaders,
-} from "@/lib/helpers";
+  updateSizeColumn,
+} from '@/lib/helpers';
 
 export default {
-  name: "TheTable",
+  name: 'TheTable',
 
   components: {
     VDataTable,
@@ -89,7 +91,7 @@ export default {
       saveChange: false,
 
       pagination: {
-        sortBy: "name",
+        sortBy: 'name',
       },
       selected: [],
 
@@ -104,16 +106,10 @@ export default {
     };
   },
 
-  emits: ["on-save", "open-dialog-window"],
+  emits: ['on-save', 'open-dialog-window'],
 
   computed: {
-    ...mapGetters([
-      "getHeaders",
-      "getHeaderActive",
-      "getProducts",
-      "getValue",
-      "getChangeColumns",
-    ]),
+    ...mapGetters(['getHeaders', 'getHeaderActive', 'getProducts', 'getValue', 'getChangeColumns']),
 
     tableHeight() {
       const screenHeight = window.innerHeight;
@@ -147,11 +143,9 @@ export default {
         this.newOrderHeaders = oldValue;
 
         newValue.forEach((el) => {
-          if (!el.show && !this.hideColumns.includes(el.key))
-            this.hideColumns.push(el.key);
+          if (!el.show && !this.hideColumns.includes(el.key)) this.hideColumns.push(el.key);
 
-          if (el.show && this.hideColumns.includes(el.key))
-            this.hideColumns = [];
+          if (el.show && this.hideColumns.includes(el.key)) this.hideColumns = [];
         });
         this.getDataTableHTML(this);
       },
@@ -160,14 +154,10 @@ export default {
 
     getHeaderActive(item) {
       if (item.show) {
-        this.showUpdateHeaders = this.showUpdateHeaders.filter(
-          (el) => el.key !== item.key
-        );
+        this.showUpdateHeaders = this.showUpdateHeaders.filter((el) => el.key !== item.key);
         this.showUpdateHeaders.splice(item.index, 0, item);
       } else {
-        this.showUpdateHeaders = this.showUpdateHeaders.filter(
-          (el) => el.key !== item.key
-        );
+        this.showUpdateHeaders = this.showUpdateHeaders.filter((el) => el.key !== item.key);
       }
     },
 
@@ -196,70 +186,30 @@ export default {
   mounted() {
     this.columns = this.getProducts;
     this.headers = this.getHeaders;
-    this.showUpdateHeaders =
-      this.getValue("new_order_headers_cut") || this.getHeaders;
-
+    this.showUpdateHeaders = this.getValue('new_order_headers_cut') || this.getHeaders;
     setTimeout(() => {
       this.updateSizeColumn();
       this.getDataTableHTML(this);
     });
 
     if (this.getScreenWidth) {
-      let table = document.querySelector("table tbody");
-      const element = document.getElementById("sort_key");
+      let table = document.querySelector('table tbody');
+      const element = document.getElementById('sort_key');
       this.changeSortColumns(table, this);
       this.changeSortHeaders(element, this);
     }
   },
 
   methods: {
-    ...mapActions(["setValue", "setChangeColumns", "deletedLine"]),
+    ...mapActions(['setValue', 'setChangeColumns', 'deletedLine']),
 
     onDragEnd(event) {
       this.headers = event.list;
     },
 
-    saveTemplateSizeColumn,
-
-    updateSizeColumn() {
-      const columnValues = {
-        action: this.getValue("size_column_action"),
-        name: this.getValue("size_column_name"),
-        price: this.getValue("size_column_price"),
-        quantity: this.getValue("size_column_quantity"),
-        product: this.getValue("size_column_product"),
-        total: this.getValue("size_column_total"),
-        newCol: this.getValue("size_column_newCol"),
-      };
-
-      const tables = document.getElementsByTagName("table");
-
-      Array.from(tables).forEach((table) => {
-        resizableGrid(table);
-      });
-
-      function resizableGrid(table) {
-        const row = table.querySelector("tr");
-        const cols = row ? Array.from(row.children) : [];
-
-        cols.forEach((col) => {
-          const orderName = col.getAttribute("data-order");
-          const columnValue = columnValues[orderName];
-
-          if (columnValue) {
-            col.style.width = `${columnValue}`;
-          }
-        });
-      }
-    },
-
-    getDataTableHTML,
-    changeSortColumns,
-    changeSortHeaders,
-
     onSaveChange() {
-      this.saveChange = "pending";
-      this.$emit("on-save");
+      this.saveChange = 'pending';
+      this.$emit('on-save');
       this.setNewOrderHeaders(this.newOrderHeaders);
       this.setNewOrderLines(this.newOrderLines);
 
@@ -269,14 +219,15 @@ export default {
     },
 
     setNewOrderHeaders(newValue) {
-      this.setValue({ name: "new_order_headers", value: newValue });
+      this.setValue({ name: 'new_order_headers', value: newValue });
       this.setValue({
-        name: "new_order_headers_cut",
+        name: 'new_order_headers_cut',
         value: this.showUpdateHeaders,
       });
     },
+
     setNewOrderLines(newValue) {
-      this.setValue({ name: "new_order_lines", value: newValue });
+      this.setValue({ name: 'new_order_lines', value: newValue });
     },
 
     openMyLoadPage(name) {
@@ -294,12 +245,17 @@ export default {
     },
 
     saveChangeActive() {
-      this.saveChange = "change";
+      this.saveChange = 'change';
     },
+
+    saveTemplateSizeColumn,
+    getDataTableHTML,
+    changeSortColumns,
+    changeSortHeaders,
+    updateSizeColumn,
   },
 };
 </script>
-
 
 <style scoped lang="scss">
 .data__table {
@@ -357,13 +313,7 @@ export default {
   }
 }
 
-.v-data-table
-  ::v-deep
-  > .v-table__wrapper
-  > table
-  > thead
-  > tr
-  > .sortable-ghost_header {
+.v-data-table ::v-deep > .v-table__wrapper > table > thead > tr > .sortable-ghost_header {
   border: 2px dashed #a6b7d4 !important;
   border-bottom: 2px dashed #a6b7d4 !important;
 }
