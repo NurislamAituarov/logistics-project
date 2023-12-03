@@ -182,6 +182,7 @@ h1 {
 @media (max-width: 425px) {
   .tab {
     min-width: 80px;
+    font-size: 12px;
   }
 }
 </style>
